@@ -1,4 +1,6 @@
 import pygame
+import pygame.freetype
+import pygame.ftfont
 from map import Map
 from hud import HUD
 from pickups import Pickup
@@ -6,6 +8,7 @@ from player import Player
 import constants
 
 LIFE_UP_COIN_AMT = 100
+FONT_SIZE = 10
 
 class Game():
     def __init__(self) -> None:
@@ -17,6 +20,7 @@ class Game():
         self.screen = pygame.display.set_mode((constants.CANVAS_WIDTH * self.window_size, constants.CANVAS_HEIGHT * self.window_size), 0, 0, 0, 1)
         self.canvas = pygame.Surface((constants.CANVAS_WIDTH, constants.CANVAS_HEIGHT)).convert()
         pygame.display.set_caption("Test Game")
+        self.game_font = pygame.font.Font("../assets/fonts/game_font.ttf", FONT_SIZE) # NOTE I've tried other fonts, but they render poorly at 160x144 scale
 
         self.map = Map()
         self.hud = HUD()
@@ -32,6 +36,7 @@ class Game():
 
     def load(self) -> None:
         self.map.load()
+        self.hud.set_font_ref(self.game_font) # Needs to come before load
         self.hud.load()
         self.pickup.load()
         self.player.load()
