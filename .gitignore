@@ -1,0 +1,9 @@
+assets/
+bin/
+include
+lib/
+lib64
+src/__pycache__/
+
+pyvenv.cfg
+
