@@ -13,6 +13,8 @@ FONT_SIZE = 10
 class Game():
     def __init__(self) -> None:
         pygame.init()
+
+        self.state = constants.GAMESTATE.GAMEPLAY # TODO Change this to title once I have it setup
         
         self.window_size = 4
         # Screen has to come before canvas because Surface.convert() needs a window display first
@@ -43,19 +45,32 @@ class Game():
         self.player.set_map_ref(self.map)
     
     def update(self, dt) -> None:
-         self.hud.update(dt)
-         self.pickup.update(dt)
-         self.player.update(dt)
+         match self.state:
+            # TODO TITLE state should handle up, down, and select input
+            case constants.GAMESTATE.GAMEPLAY:
+                self.hud.update(dt)
+                self.pickup.update(dt)
+                self.player.update(dt)
+            # TODO PAUSE state should just handle unpausing and exiting the game
+            # TODO GAMEOVER state shouldn't have any controls, just have a timer and then go back to TITLE state
 
     def draw(self) -> None:
-        self.canvas.fill(pygame.color.Color(128, 128, 255)) # Good ol' Cornflower Blue!
 
-        self.map.draw(self.canvas)
-        self.pickup.draw(self.canvas)
-        self.player.draw(self.canvas)
+        match self.state:
+            # TODO TITLE state should draw Title screen stuff
+            case constants.GAMESTATE.GAMEPLAY:
+                self.canvas.fill(pygame.color.Color(128, 128, 255)) # Good ol' Cornflower Blue!
 
-        self.hud.draw(self.canvas)
+                self.map.draw(self.canvas)
+                self.pickup.draw(self.canvas)
+                self.player.draw(self.canvas)
+
+                self.hud.draw(self.canvas)
+                
+            # TODO PAUSE state should draw the pause screen (just dim it and write 'paused')
+            # TODO GAMEOVER state should draw Game Over screen stuff
+
         # draw canvas to the screen scaled to the same size as the screen(window)
         self.screen.blit(pygame.transform.scale(self.canvas, self.screen.get_rect().size))
-
+        
         pygame.display.flip()
