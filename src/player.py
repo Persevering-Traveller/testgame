@@ -1,7 +1,14 @@
+from enum import Enum
 import pygame
 
-# TODO I should actually attempt a state machine
-# States should be: Idle, Moving, Jumping, Hurt, Died, Win, Paused
+class PLAYERSTATES(Enum):
+    IDLE = 0
+    MOVING = 1
+    JUMPING = 2
+    HURT = 3
+    DIED = 4
+    WIN = 5
+    PAUSED = 6
 
 COLLISION_WIDTH = 14
 COLLISION_HEIGHT = 16
@@ -28,9 +35,8 @@ class Player():
         self.x_velocity = 0.0
         self.y_velocity = 0.0
 
-        self.current_state = None # Probably an enum....if python has them
+        self.current_state = PLAYERSTATES.IDLE
         self.is_grounded = True
-        self.is_hurt = False # This might need to be a state instead
         self.facing = 1 # 1 for right, -1 for left
 
     def load(self):
@@ -45,18 +51,30 @@ class Player():
 
     def update(self, dt):
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_a]:
-            self.direction = -1
-        if keys[pygame.K_d]:
-            self.direction = 1
-        if not keys[pygame.K_a] and not keys[pygame.K_d]:
-            self.direction = 0
-            if self.x_velocity != 0:
-                if self.x_velocity < 0:
-                    self.x_velocity += self.deacceleration * dt
-                    pass
-                else:
-                    self.x_velocity -= self.deacceleration * dt
+
+        match self.current_state:
+            case PLAYERSTATES.IDLE:
+                if keys[pygame.K_a]:
+                    if self.is_grounded:
+                        #self.current_state = PLAYERSTATES.MOVING
+                        pass
+            
+                    self.direction = -1
+                if keys[pygame.K_d]:
+                    if self.is_grounded:
+                        #self.current_state = PLAYERSTATES.MOVING
+                        pass
+                    self.direction = 1
+                # TODO This should be moved to MOVING state when set up
+                if not keys[pygame.K_a] and not keys[pygame.K_d]:
+                    # TODO Don't change state back to idle until the player has reached 0 X velocity on the ground (or close to)
+                    self.direction = 0
+                    if self.x_velocity != 0:
+                        if self.x_velocity < 0:
+                            self.x_velocity += self.deacceleration * dt
+                            pass
+                        else:
+                            self.x_velocity -= self.deacceleration * dt
         # TODO check for jumping and running and hitting escape to pause
 
         self.x_velocity += self.direction * self.acceleration * dt
@@ -86,7 +104,9 @@ class Player():
         elif self.pos_rect.x + self.pos_rect.width > 160: self.pos_rect.x = 160 - self.pos_rect.width
 
     def draw(self, canvas):
-        canvas.blit(self.sprite, (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET), self.anim_frames[0])
+        match self.current_state:
+            case PLAYERSTATES.IDLE:
+                canvas.blit(self.sprite, (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET), self.anim_frames[0])
     
     def set_map_ref(self, map):
         if map != None:
