@@ -88,16 +88,40 @@ class Player():
 
         self.pos_rect.move_ip(self.x_velocity, self.y_velocity)
 
-        # TODO Collision checking
-        # Currently only checks from the top left of our collision rect if we're i n a collidable tile
-        # Should probably start checking the tiles left, right, top, and bottom of collision rect
-        tile_id = self.map_ref.get_tile_at(self.pos_rect.x, self.pos_rect.y)
-        print(f"Position is: X: {self.pos_rect.x}, Y:{self.pos_rect.y} -- Tile id is: {tile_id}")
-        if tile_id in COLLISION_TILES:
-            if self.x_velocity > 0:
-                self.pos_rect.move_ip(-self.x_velocity, 0)
-            else:
-                self.pos_rect.move_ip(self.x_velocity, 0)
+        # Collision Checking
+        # Checks the tiles left, right, top, and bottom of collision rect for collidable tiles
+        # If one is found, collision flag will be true and used for collision reaction
+        # collided_tiles is used to keep track of what indexes of surrounding tiles are the colliding tiles
+        collision = False # TODO Do I need this variable or can I just use collided_tile?
+        surrounding_tiles = [
+            self.map_ref.get_tile_at(self.pos_rect.left, self.pos_rect.centery), # Left Tile; 0
+            self.map_ref.get_tile_at(self.pos_rect.right, self.pos_rect.centery), # Right Tile; 1
+            self.map_ref.get_tile_at(self.pos_rect.centerx, self.pos_rect.top), # Top Tile; 2
+            self.map_ref.get_tile_at(self.pos_rect.centerx, self.pos_rect.bottom) # Bottom Tile; 3
+        ]
+        collided_tiles = []
+        print(f"Position is: X: {self.pos_rect.centerx}, Y:{self.pos_rect.centery} -- Tile ids are: {surrounding_tiles}")
+        for collision_index, tile_id in enumerate(surrounding_tiles):
+            if tile_id in COLLISION_TILES:
+                collision = True
+                collided_tiles.append(collision_index)
+
+        # TODO The character seems to stop prematurely by a pixel or so, should implement checking by multiple tiny steps
+        # Collision Reaction
+        if collision:
+            for col_tile in collided_tiles: # Iterate over the collection of indexes that are collided tiles
+                if col_tile < 2: # Collision on Left or Right Tiles
+                    if self.x_velocity > 0:
+                        self.pos_rect.move_ip(-self.x_velocity, 0) # NOTE move_ip() does not function how I thought...
+                    else:
+                        self.pos_rect.move_ip(-self.x_velocity, 0) # NOTE because I thought I should positively move if heading to the left, but it's subtract?
+                # TODO y collision checking has not been tested yet because jumping has not been implemented yet
+                else: # Collision on Top or Bottom Tiles
+                    if self.y_velocity > 0:
+                        self.pos_rect.move_ip(0, -self.y_velocity) # NOTE I will keep these seperate untill I understand
+                    else:
+                        self.pos_rect.move_ip(0, -self.y_velocity)
+
 
         # Screen Boundaries ; Temporary
         if self.pos_rect.x < 0: self.pos_rect.x = 0
