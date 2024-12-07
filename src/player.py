@@ -75,14 +75,13 @@ class Player():
                     self.direction = 1
 
                 if not keys[pygame.K_a] and not keys[pygame.K_d]:
-                    # TODO Don't change state back to idle until the player has reached 0 X velocity on the ground (or close to)
-                    #if self.is_grounded:
-                        #self.current_state = PLAYERSTATES.IDLE
+                    # Don't change state back to idle until the player has reached 0 X velocity on the ground (or close to)
+                    if self.is_grounded and abs(self.x_velocity) < 0.25: # TODO Play with this value some more
+                        self.current_state = PLAYERSTATES.IDLE
                     self.direction = 0
                     if self.x_velocity != 0:
                         if self.x_velocity < 0:
                             self.x_velocity += self.deacceleration * dt
-                            pass
                         else:
                             self.x_velocity -= self.deacceleration * dt
         # TODO check for jumping and running and hitting escape to pause
