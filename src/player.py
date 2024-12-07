@@ -54,6 +54,8 @@ class Player():
 
     def update(self, dt):
         self.anim_counter += dt # Needed here for animation
+
+        last_dir = self.direction
         
         keys = pygame.key.get_pressed()
 
@@ -79,6 +81,7 @@ class Player():
                     if self.is_grounded and abs(self.x_velocity) < 0.25: # TODO Play with this value some more
                         self.current_state = PLAYERSTATES.IDLE
                     self.direction = 0
+                    last_dir = self.direction
                     if self.x_velocity != 0:
                         if self.x_velocity < 0:
                             self.x_velocity += self.deacceleration * dt
@@ -87,6 +90,11 @@ class Player():
         # TODO check for jumping and running and hitting escape to pause
 
         self.x_velocity += self.direction * self.acceleration * dt
+
+        # For flipping the sprite if we're facing in another direction
+        if last_dir != self.direction:
+            if self.direction < 0: self.facing = -1
+            else: self.facing = 1
 
         if self.x_velocity > 0:
             if self.x_velocity >= MAX_X_VELOCITY:
@@ -136,23 +144,40 @@ class Player():
         if self.pos_rect.x < 0: self.pos_rect.x = 0
         elif self.pos_rect.x + self.pos_rect.width > 160: self.pos_rect.x = 160 - self.pos_rect.width
 
-    def draw(self, canvas):
+    def draw(self, canvas: pygame.Surface):
         match self.current_state:
             case PLAYERSTATES.IDLE:
                 self.anim_index = 0
-                canvas.blit(self.sprite, (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET), self.anim_frames[self.anim_index])
+                # For facing left, we need to get the subsurface image, flip only that image, then blit that image to the canvas
+                if self.facing < 0:
+                    frame_to_flip = self.sprite.subsurface(self.anim_frames[self.anim_index])
+                    canvas.blit(pygame.transform.flip(frame_to_flip, True, False), (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET))
+                else:
+                    canvas.blit(self.sprite, (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET), self.anim_frames[self.anim_index].scale_by(1, 1))
             case PLAYERSTATES.MOVING:
                 if self.anim_index < 1 or self.anim_index > 3: self.anim_index = 1 # The Starting frame for Moving animation
-                canvas.blit(self.sprite, (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET), self.anim_frames[self.anim_index])
+                if self.facing < 0:
+                    frame_to_flip = self.sprite.subsurface(self.anim_frames[self.anim_index])
+                    canvas.blit(pygame.transform.flip(frame_to_flip, True, False), (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET))
+                else:
+                    canvas.blit(self.sprite, (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET), self.anim_frames[self.anim_index])
                 if self.anim_counter >= self.anim_speed:
                     self.anim_index += 1
                     self.anim_counter = 0.0
             case PLAYERSTATES.JUMPING:
                 self.anim_index = 4
-                canvas.blit(self.sprite, (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET), self.anim_frames[self.anim_index])
+                if self.facing < 0:
+                    frame_to_flip = self.sprite.subsurface(self.anim_frames[self.anim_index])
+                    canvas.blit(pygame.transform.flip(frame_to_flip, True, False), (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET))
+                else:
+                    canvas.blit(self.sprite, (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET), self.anim_frames[self.anim_index])
             case PLAYERSTATES.HURT | PLAYERSTATES.DIED:
                 self.anim_index = 5
-                canvas.blit(self.sprite, (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET), self.anim_frames[self.anim_index])
+                if self.facing < 0:
+                    frame_to_flip = self.sprite.subsurface(self.anim_frames[self.anim_index])
+                    canvas.blit(pygame.transform.flip(frame_to_flip, True, False), (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET))
+                else:
+                    canvas.blit(self.sprite, (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET), self.anim_frames[self.anim_index])
     
     def set_map_ref(self, map):
         if map != None:
