@@ -1,5 +1,6 @@
 from enum import Enum
 import pygame
+import constants
 
 class PLAYERSTATES(Enum):
     IDLE = 0
@@ -16,7 +17,6 @@ SPRITE_FRAME_SIZE = 32
 SPRITE_OFFSET = 9 # The collision rect is 9x9 inwards on a frame
 MAX_X_VELOCITY = 2.0
 MAX_Y_VELOCITY = 2.0 # TODO play with and change these values (the velocity)
-COLLISION_TILES = [39, 40, 41, 50, 52, 53] # The tile ID of each collidable tile in Tiled
 
 class Player():
     def __init__(self) -> None:
@@ -119,7 +119,7 @@ class Player():
         collided_tiles = []
         print(f"Position is: X: {self.pos_rect.centerx}, Y:{self.pos_rect.centery} -- Tile ids are: {surrounding_tiles}")
         for collision_index, tile_id in enumerate(surrounding_tiles):
-            if tile_id in COLLISION_TILES:
+            if tile_id in constants.COLLISION_TILES:
                 collision = True
                 collided_tiles.append(collision_index)
 
