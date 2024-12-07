@@ -23,6 +23,8 @@ class Player():
         self.sprite = None # Surface
         self.anim_frames = []
         self.anim_index = 0
+        self.anim_speed = 0.1
+        self.anim_counter = 0.0
         self.pos_rect = None # Rect ; position and collision rect
         self.map_ref = None # A reference to the map (game level) for collision checking
 
@@ -50,24 +52,31 @@ class Player():
         self.anim_frames.append(pygame.Rect(0, SPRITE_FRAME_SIZE * 4, SPRITE_FRAME_SIZE, SPRITE_FRAME_SIZE)) # Hurt and Dying
 
     def update(self, dt):
+        self.anim_counter += dt # Needed here for animation
+        
         keys = pygame.key.get_pressed()
 
         match self.current_state:
             case PLAYERSTATES.IDLE:
                 if keys[pygame.K_a]:
                     if self.is_grounded:
-                        #self.current_state = PLAYERSTATES.MOVING
-                        pass
-            
+                        self.current_state = PLAYERSTATES.MOVING
                     self.direction = -1
                 if keys[pygame.K_d]:
                     if self.is_grounded:
-                        #self.current_state = PLAYERSTATES.MOVING
-                        pass
+                        self.current_state = PLAYERSTATES.MOVING
                     self.direction = 1
                 # TODO This should be moved to MOVING state when set up
+            case PLAYERSTATES.MOVING:
+                if keys[pygame.K_a]:
+                    self.direction = -1
+                if keys[pygame.K_d]:
+                    self.direction = 1
+
                 if not keys[pygame.K_a] and not keys[pygame.K_d]:
                     # TODO Don't change state back to idle until the player has reached 0 X velocity on the ground (or close to)
+                    #if self.is_grounded:
+                        #self.current_state = PLAYERSTATES.IDLE
                     self.direction = 0
                     if self.x_velocity != 0:
                         if self.x_velocity < 0:
@@ -130,7 +139,21 @@ class Player():
     def draw(self, canvas):
         match self.current_state:
             case PLAYERSTATES.IDLE:
-                canvas.blit(self.sprite, (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET), self.anim_frames[0])
+                self.anim_index = 0
+                canvas.blit(self.sprite, (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET), self.anim_frames[self.anim_index])
+            case PLAYERSTATES.MOVING:
+                if self.anim_index < 1 or self.anim_index > 3: self.anim_index = 1
+                if self.anim_counter >= self.anim_speed:
+                    self.anim_index += 1
+                    self.anim_counter = 0.0
+                canvas.blit(self.sprite, (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET), self.anim_frames[self.anim_index])
+                if self.anim_index == 4: self.anim_index = 1
+            case PLAYERSTATES.JUMPING:
+                self.anim_index = 4
+                canvas.blit(self.sprite, (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET), self.anim_frames[self.anim_index])
+            case PLAYERSTATES.HURT | PLAYERSTATES.DIED:
+                self.anim_index = 5
+                canvas.blit(self.sprite, (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET), self.anim_frames[self.anim_index])
     
     def set_map_ref(self, map):
         if map != None:
