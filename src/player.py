@@ -47,9 +47,10 @@ class Player():
 
         self.anim_frames.append(pygame.Rect(0, 0, SPRITE_FRAME_SIZE, SPRITE_FRAME_SIZE)) # Idle
         for i in range(3):
-            self.anim_frames.append(pygame.Rect(SPRITE_FRAME_SIZE * i, SPRITE_FRAME_SIZE * 2, SPRITE_FRAME_SIZE, SPRITE_FRAME_SIZE)) # Moving
-        self.anim_frames.append(pygame.Rect(0, SPRITE_FRAME_SIZE * 3, SPRITE_FRAME_SIZE, SPRITE_FRAME_SIZE)) # Jumping
-        self.anim_frames.append(pygame.Rect(0, SPRITE_FRAME_SIZE * 4, SPRITE_FRAME_SIZE, SPRITE_FRAME_SIZE)) # Hurt and Dying
+            self.anim_frames.append(pygame.Rect(SPRITE_FRAME_SIZE * i, SPRITE_FRAME_SIZE, SPRITE_FRAME_SIZE, SPRITE_FRAME_SIZE)) # Moving
+        self.anim_frames.append(pygame.Rect(0, SPRITE_FRAME_SIZE * 2, SPRITE_FRAME_SIZE, SPRITE_FRAME_SIZE)) # Jumping
+        self.anim_frames.append(pygame.Rect(0, SPRITE_FRAME_SIZE * 3, SPRITE_FRAME_SIZE, SPRITE_FRAME_SIZE)) # Hurt and Dying
+        print(self.anim_frames)
 
     def update(self, dt):
         self.anim_counter += dt # Needed here for animation
@@ -142,12 +143,11 @@ class Player():
                 self.anim_index = 0
                 canvas.blit(self.sprite, (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET), self.anim_frames[self.anim_index])
             case PLAYERSTATES.MOVING:
-                if self.anim_index < 1 or self.anim_index > 3: self.anim_index = 1
+                if self.anim_index < 1 or self.anim_index > 3: self.anim_index = 1 # The Starting frame for Moving animation
+                canvas.blit(self.sprite, (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET), self.anim_frames[self.anim_index])
                 if self.anim_counter >= self.anim_speed:
                     self.anim_index += 1
                     self.anim_counter = 0.0
-                canvas.blit(self.sprite, (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET), self.anim_frames[self.anim_index])
-                if self.anim_index == 4: self.anim_index = 1
             case PLAYERSTATES.JUMPING:
                 self.anim_index = 4
                 canvas.blit(self.sprite, (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET), self.anim_frames[self.anim_index])
