@@ -33,7 +33,7 @@ class Player():
         self.acceleration = 30.0
         self.deacceleration = 15.0
         self.gravity = 9.81
-        self.jump_force = 10.0
+        self.jump_force = -250.0
         self.x_velocity = 0.0
         self.y_velocity = 0.0
 
@@ -69,17 +69,27 @@ class Player():
                     if self.is_grounded:
                         self.current_state = PLAYERSTATES.MOVING
                     self.direction = 1
-                # TODO This should be moved to MOVING state when set up
+                if keys[pygame.K_j]:
+                    self.current_state = PLAYERSTATES.JUMPING
+                    self.is_grounded = False
+                    self.y_velocity += self.jump_force * dt
             case PLAYERSTATES.MOVING:
                 if keys[pygame.K_a]:
                     self.direction = -1
                 if keys[pygame.K_d]:
                     self.direction = 1
+                if keys[pygame.K_j]:
+                    self.current_state = PLAYERSTATES.JUMPING
+                    self.is_grounded = False
+                    self.y_velocity += self.jump_force * dt
 
                 if not keys[pygame.K_a] and not keys[pygame.K_d]:
                     # Don't change state back to idle until the player has reached 0 X velocity on the ground (or close to)
-                    if self.is_grounded and abs(self.x_velocity) < 0.25: # TODO Play with this value some more
-                        self.current_state = PLAYERSTATES.IDLE
+                    if self.is_grounded:
+                        if abs(self.x_velocity) < 0.25: # TODO Play with this value some more
+                            self.current_state = PLAYERSTATES.IDLE
+                        else:
+                            self.current_state = PLAYERSTATES.MOVING
                     self.direction = 0
                     last_dir = self.direction
                     if self.x_velocity != 0:
@@ -87,8 +97,31 @@ class Player():
                             self.x_velocity += self.deacceleration * dt
                         else:
                             self.x_velocity -= self.deacceleration * dt
-        # TODO check for jumping and running and hitting escape to pause
+            case PLAYERSTATES.JUMPING:
+                if keys[pygame.K_a]:
+                    self.direction = -1
+                if keys[pygame.K_d]:
+                    self.direction = 1
+                
+                if not keys[pygame.K_a] and not keys[pygame.K_d]:
+                    self.direction = 0
+                    last_dir = self.direction
+                    if self.x_velocity != 0:
+                        if self.x_velocity < 0:
+                            self.x_velocity += self.deacceleration * dt
+                        else:
+                            self.x_velocity -= self.deacceleration * dt
+                
+                # Needs to be out of the not pressing left or right keys check or else we won't change state if still moving
+                if self.is_grounded:
+                    if abs(self.x_velocity) < 0.25: # TODO Play with this value some more
+                        self.current_state = PLAYERSTATES.IDLE
+                    else:
+                        self.current_state = PLAYERSTATES.MOVING
 
+        # TODO Not sure if it's the gravity or if it's the non-stepped collision push back, but
+        # jump height is very slightly variable. FIX
+        self.y_velocity += self.gravity * dt
         self.x_velocity += self.direction * self.acceleration * dt
 
         # For flipping the sprite if we're facing in another direction
@@ -136,13 +169,19 @@ class Player():
                 else: # Collision on Top or Bottom Tiles
                     if self.y_velocity > 0:
                         self.pos_rect.move_ip(0, -self.y_velocity) # NOTE I will keep these seperate untill I understand
+                        self.is_grounded = True
+                        self.y_velocity = 0
                     else:
                         self.pos_rect.move_ip(0, -self.y_velocity)
+                        self.y_velocity = 0
 
 
         # Screen Boundaries ; Temporary
         if self.pos_rect.x < 0: self.pos_rect.x = 0
         elif self.pos_rect.x + self.pos_rect.width > 160: self.pos_rect.x = 160 - self.pos_rect.width
+
+        if self.pos_rect.y < -32: self.pos_rect.y = -32
+        elif self.pos_rect.y + self.pos_rect.height > 144: self.pos_rect.y = 144 - self.pos_rect.height
 
     def draw(self, canvas: pygame.Surface):
         match self.current_state:
