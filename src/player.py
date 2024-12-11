@@ -17,6 +17,7 @@ SPRITE_FRAME_SIZE = 32
 SPRITE_OFFSET = 9 # The collision rect is 9x9 inwards on a frame
 MAX_X_VELOCITY = 2.0
 MAX_Y_VELOCITY = 2.0 # TODO play with and change these values (the velocity)
+SUB_STEP_VELOCITY = 4
 
 class Player():
     def __init__(self) -> None:
@@ -119,8 +120,7 @@ class Player():
                     else:
                         self.current_state = PLAYERSTATES.MOVING
 
-        # TODO Not sure if it's the gravity or if it's the non-stepped collision push back, but
-        # jump height is very slightly variable. FIX
+
         self.y_velocity += self.gravity * dt
         self.x_velocity += self.direction * self.acceleration * dt
 
@@ -136,44 +136,73 @@ class Player():
             if self.x_velocity <= -MAX_X_VELOCITY:
                 self.x_velocity = -MAX_X_VELOCITY
 
-        self.pos_rect.move_ip(self.x_velocity, self.y_velocity)
+        # The velocity of each direction (x&y) needs to be broken down into 1s. 
+        # So if x velocity is like 2.3 or something, move the player 1 pixel at a time (2 steps in total) 
+        # and check for collsions only in the x axis each step.
+        # If y velocity is like 4.8, we step through it 1 pixel at a time (4 steps in total) and check for collisions only in the y axis
+        # each step
+        sub_x_vel_acc = int(self.x_velocity)
+        sub_y_vel_acc = int(self.y_velocity)
+        print(f"Sub X Vel: {sub_x_vel_acc}, Sub Y Vel: {sub_y_vel_acc}, abs y vel {abs(sub_y_vel_acc)}")
+        # X movement first
+        for i in range(abs(sub_x_vel_acc)): # NOTE Fun thing about python, you can give this for a negative number and uh....WATCH OUT
+            if sub_x_vel_acc > 0: # Move them in the direction they were heading, right or left
+                self.pos_rect.move_ip(1, 0)
+            else:
+                self.pos_rect.move_ip(-1, 0)
 
-        # Collision Checking
-        # Checks the tiles left, right, top, and bottom of collision rect for collidable tiles
-        # If one is found, collision flag will be true and used for collision reaction
-        # collided_tiles is used to keep track of what indexes of surrounding tiles are the colliding tiles
-        collision = False # TODO Do I need this variable or can I just use collided_tile?
-        surrounding_tiles = [
-            self.map_ref.get_tile_at(self.pos_rect.left, self.pos_rect.centery), # Left Tile; 0
-            self.map_ref.get_tile_at(self.pos_rect.right, self.pos_rect.centery), # Right Tile; 1
-            self.map_ref.get_tile_at(self.pos_rect.centerx, self.pos_rect.top), # Top Tile; 2
-            self.map_ref.get_tile_at(self.pos_rect.centerx, self.pos_rect.bottom) # Bottom Tile; 3
-        ]
-        collided_tiles = []
-        print(f"Position is: X: {self.pos_rect.centerx}, Y:{self.pos_rect.centery} -- Tile ids are: {surrounding_tiles}")
-        for collision_index, tile_id in enumerate(surrounding_tiles):
-            if tile_id in constants.COLLISION_TILES:
-                collision = True
-                collided_tiles.append(collision_index)
+            # Checks the tiles left and right of collision rect for collidable tiles
+            # If one is found, collision flag will be true and used for collision reaction
+            collision = False
+            surrounding_tiles = [
+                self.map_ref.get_tile_at(self.pos_rect.left, self.pos_rect.centery), # Check Left Tile
+                self.map_ref.get_tile_at(self.pos_rect.right, self.pos_rect.centery), # Check Right Tile
+            ]
+            print(f"Position is: X: {self.pos_rect.centerx}, Y:{self.pos_rect.centery} -- Tile ids are: {surrounding_tiles}")
+            for tile_id in surrounding_tiles:
+                if tile_id in constants.COLLISION_TILES:
+                    collision = True
+            
+            # X collision and reaction is working PERFECTLY!
+            if collision:
+                if sub_x_vel_acc > 0:
+                    self.pos_rect.move_ip(-1, 0) # If heading right, push back left
+                else:
+                    self.pos_rect.move_ip(1, 0) # if heading left, push back right
+        
+        # Then Y movement
+        for i in range(abs(sub_y_vel_acc)):
+            print(f"i is: {i}")
+            if sub_y_vel_acc > 0: # Move one pixel in the direction they were heading: down or up
+                self.pos_rect.move_ip(0, 1)
+            else:
+                self.pos_rect.move_ip(0, -1)
 
-        # TODO The character seems to stop prematurely by a pixel or so, should implement checking by multiple tiny steps
-        # Collision Reaction
-        if collision:
-            for col_tile in collided_tiles: # Iterate over the collection of indexes that are collided tiles
-                if col_tile < 2: # Collision on Left or Right Tiles
-                    if self.x_velocity > 0:
-                        self.pos_rect.move_ip(-self.x_velocity, 0) # NOTE move_ip() does not function how I thought...
-                    else:
-                        self.pos_rect.move_ip(-self.x_velocity, 0) # NOTE because I thought I should positively move if heading to the left, but it's subtract?
-                # TODO y collision checking has not been tested yet because jumping has not been implemented yet
-                else: # Collision on Top or Bottom Tiles
-                    if self.y_velocity > 0:
-                        self.pos_rect.move_ip(0, -self.y_velocity) # NOTE I will keep these seperate untill I understand
-                        self.is_grounded = True
-                        self.y_velocity = 0
-                    else:
-                        self.pos_rect.move_ip(0, -self.y_velocity)
-                        self.y_velocity = 0
+            # Checks the tiles above and below the collision rect for collidable tiles.
+            # If one is found, collision flag will become true and used for collision reaction 
+            collision = False
+            surrounding_tiles = [
+                self.map_ref.get_tile_at(self.pos_rect.centerx, self.pos_rect.top), # Check Top Tile
+                self.map_ref.get_tile_at(self.pos_rect.centerx, self.pos_rect.bottom) # Check Bottom Tile
+            ]
+
+            for tile_id in surrounding_tiles:
+                if tile_id in constants.COLLISION_TILES:
+                    collision = True
+            
+            # TODO The current problem is Y collision reaction seems to be pushing too far up, the character will hover
+            # about 2 pixels above the ground after jumping. If jumping around, sometimes they go through the floor,
+            # sometimes right in line. There is also this strange variable jump height. FIXXXXX
+            if collision:
+                if sub_y_vel_acc > 0:
+                    print("Moving down, so push back up")
+                    self.pos_rect.move_ip(0, -1) # If moving down, and collision, push back up
+                    self.is_grounded = True
+                    self.y_velocity = 0
+                else:
+                    print("Moving up, so push back down")
+                    self.pos_rect.move_ip(0, 1) # if moving up, and collision, push back down
+                    self.y_velocity = 0
 
 
         # Screen Boundaries ; Temporary
