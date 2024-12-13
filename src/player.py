@@ -120,7 +120,7 @@ class Player():
                     else:
                         self.current_state = PLAYERSTATES.MOVING
 
-
+        #TODO Still have unintentional variable jump height. FIX.
         self.y_velocity += self.gravity * dt
         self.x_velocity += self.direction * self.acceleration * dt
 
@@ -136,6 +136,16 @@ class Player():
             if self.x_velocity <= -MAX_X_VELOCITY:
                 self.x_velocity = -MAX_X_VELOCITY
 
+        
+        # TODO This is almost correct, but it seems that pushing back by 1 pixel is a naive approach.
+        # I believe what is needed to be done is that I have to find out the length we're inside of the
+        # tile in whatever direction and pop them out to its proper side, probably using the current direction
+        # the player was heading to find out the appropriate opposite side to push them back.
+        # Currently the player goes flush to any tile, unless jumping at an angle, then the player will be inside
+        # the tile sometimes, and others not.
+        # Optionally, I could see if there's a collision and loop over pushing them out one pixel at a time until
+        # there's no longer a collision. But would it be better to just pop them out that whole amount all in one go?
+        #
         # The velocity of each direction (x&y) needs to be broken down into 1s. 
         # So if x velocity is like 2.3 or something, move the player 1 pixel at a time (2 steps in total) 
         # and check for collsions only in the x axis each step.
@@ -143,7 +153,6 @@ class Player():
         # each step
         sub_x_vel_acc = int(self.x_velocity)
         sub_y_vel_acc = int(self.y_velocity)
-        print(f"Sub X Vel: {sub_x_vel_acc}, Sub Y Vel: {sub_y_vel_acc}, abs y vel {abs(sub_y_vel_acc)}")
         # X movement first
         for i in range(abs(sub_x_vel_acc)): # NOTE Fun thing about python, you can give this for a negative number and uh....WATCH OUT
             if sub_x_vel_acc > 0: # Move them in the direction they were heading, right or left
@@ -158,7 +167,7 @@ class Player():
                 self.map_ref.get_tile_at(self.pos_rect.left, self.pos_rect.centery), # Check Left Tile
                 self.map_ref.get_tile_at(self.pos_rect.right, self.pos_rect.centery), # Check Right Tile
             ]
-            print(f"Position is: X: {self.pos_rect.centerx}, Y:{self.pos_rect.centery} -- Tile ids are: {surrounding_tiles}")
+            #print(f"Position is: X: {self.pos_rect.centerx}, Y:{self.pos_rect.centery} -- Tile ids are: {surrounding_tiles}")
             for tile_id in surrounding_tiles:
                 if tile_id in constants.COLLISION_TILES:
                     collision = True
@@ -172,7 +181,6 @@ class Player():
         
         # Then Y movement
         for i in range(abs(sub_y_vel_acc)):
-            print(f"i is: {i}")
             if sub_y_vel_acc > 0: # Move one pixel in the direction they were heading: down or up
                 self.pos_rect.move_ip(0, 1)
             else:
@@ -183,24 +191,19 @@ class Player():
             collision = False
             surrounding_tiles = [
                 self.map_ref.get_tile_at(self.pos_rect.centerx, self.pos_rect.top), # Check Top Tile
-                self.map_ref.get_tile_at(self.pos_rect.centerx, self.pos_rect.bottom) # Check Bottom Tile
+                self.map_ref.get_tile_at(self.pos_rect.centerx, self.pos_rect.bottom - 1) # Check Bottom Tile 1 additional pixel below self
             ]
 
             for tile_id in surrounding_tiles:
                 if tile_id in constants.COLLISION_TILES:
                     collision = True
             
-            # TODO The current problem is Y collision reaction seems to be pushing too far up, the character will hover
-            # about 2 pixels above the ground after jumping. If jumping around, sometimes they go through the floor,
-            # sometimes right in line. There is also this strange variable jump height. FIXXXXX
             if collision:
                 if sub_y_vel_acc > 0:
-                    print("Moving down, so push back up")
                     self.pos_rect.move_ip(0, -1) # If moving down, and collision, push back up
                     self.is_grounded = True
                     self.y_velocity = 0
                 else:
-                    print("Moving up, so push back down")
                     self.pos_rect.move_ip(0, 1) # if moving up, and collision, push back down
                     self.y_velocity = 0
 
