@@ -34,7 +34,7 @@ class Player():
         self.acceleration = 30.0
         self.deacceleration = 15.0
         self.gravity = 9.81
-        self.jump_force = -250.0
+        self.jump_force = -4.0
         self.x_velocity = 0.0
         self.y_velocity = 0.0
 
@@ -73,7 +73,7 @@ class Player():
                 if keys[pygame.K_j]:
                     self.current_state = PLAYERSTATES.JUMPING
                     self.is_grounded = False
-                    self.y_velocity += self.jump_force * dt
+                    self.y_velocity = self.jump_force
             case PLAYERSTATES.MOVING:
                 if keys[pygame.K_a]:
                     self.direction = -1
@@ -82,7 +82,7 @@ class Player():
                 if keys[pygame.K_j]:
                     self.current_state = PLAYERSTATES.JUMPING
                     self.is_grounded = False
-                    self.y_velocity += self.jump_force * dt
+                    self.y_velocity = self.jump_force
 
                 if not keys[pygame.K_a] and not keys[pygame.K_d]:
                     # Don't change state back to idle until the player has reached 0 X velocity on the ground (or close to)
@@ -120,7 +120,6 @@ class Player():
                     else:
                         self.current_state = PLAYERSTATES.MOVING
 
-        #TODO Still have unintentional variable jump height. FIX.
         self.y_velocity += self.gravity * dt
         self.x_velocity += self.direction * self.acceleration * dt
 
