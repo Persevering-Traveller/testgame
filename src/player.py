@@ -135,16 +135,6 @@ class Player():
             if self.x_velocity <= -MAX_X_VELOCITY:
                 self.x_velocity = -MAX_X_VELOCITY
 
-        
-        # TODO This is almost correct, but it seems that pushing back by 1 pixel is a naive approach.
-        # I believe what is needed to be done is that I have to find out the length we're inside of the
-        # tile in whatever direction and pop them out to its proper side, probably using the current direction
-        # the player was heading to find out the appropriate opposite side to push them back.
-        # Currently the player goes flush to any tile, unless jumping at an angle, then the player will be inside
-        # the tile sometimes, and others not.
-        # Optionally, I could see if there's a collision and loop over pushing them out one pixel at a time until
-        # there's no longer a collision. But would it be better to just pop them out that whole amount all in one go?
-        #
         # The velocity of each direction (x&y) needs to be broken down into 1s. 
         # So if x velocity is like 2.3 or something, move the player 1 pixel at a time (2 steps in total) 
         # and check for collsions only in the x axis each step.
@@ -159,12 +149,16 @@ class Player():
             else:
                 self.pos_rect.move_ip(-1, 0)
 
-            # Checks the tiles left and right of collision rect for collidable tiles
+            # Checks the tiles left and right of collision rect at 3 points(Top, Center, and Bottom) for collidable tiles
             # If one is found, collision flag will be true and used for collision reaction
             collision = False
             surrounding_tiles = [
-                self.map_ref.get_tile_at(self.pos_rect.left, self.pos_rect.centery), # Check Left Tile
-                self.map_ref.get_tile_at(self.pos_rect.right, self.pos_rect.centery), # Check Right Tile
+                self.map_ref.get_tile_at(self.pos_rect.left, self.pos_rect.top), # Check Top-Left Tile
+                self.map_ref.get_tile_at(self.pos_rect.left, self.pos_rect.centery), # Check Center-Left Tile
+                self.map_ref.get_tile_at(self.pos_rect.left, self.pos_rect.bottom - 1), # Check Bottom-Left Tile 1 additional pixel above self
+                self.map_ref.get_tile_at(self.pos_rect.right, self.pos_rect.top), # Check Top-Right Tile
+                self.map_ref.get_tile_at(self.pos_rect.right, self.pos_rect.centery), # Check Center-Right Tile
+                self.map_ref.get_tile_at(self.pos_rect.right, self.pos_rect.bottom - 1), # Check Bottom-Right Tile 1 additional pixel above self
             ]
             #print(f"Position is: X: {self.pos_rect.centerx}, Y:{self.pos_rect.centery} -- Tile ids are: {surrounding_tiles}")
             for tile_id in surrounding_tiles:
@@ -185,12 +179,16 @@ class Player():
             else:
                 self.pos_rect.move_ip(0, -1)
 
-            # Checks the tiles above and below the collision rect for collidable tiles.
+            # Checks the tiles above and below the collision rect at 3 points(Left, Center, and Right) for collidable tiles.
             # If one is found, collision flag will become true and used for collision reaction 
             collision = False
             surrounding_tiles = [
-                self.map_ref.get_tile_at(self.pos_rect.centerx, self.pos_rect.top), # Check Top Tile
-                self.map_ref.get_tile_at(self.pos_rect.centerx, self.pos_rect.bottom - 1) # Check Bottom Tile 1 additional pixel below self
+                self.map_ref.get_tile_at(self.pos_rect.left, self.pos_rect.top), # Check Top-Left Tile
+                self.map_ref.get_tile_at(self.pos_rect.centerx, self.pos_rect.top), # Check Top-Center Tile
+                self.map_ref.get_tile_at(self.pos_rect.right, self.pos_rect.top), # Check Top-Right Tile
+                self.map_ref.get_tile_at(self.pos_rect.left, self.pos_rect.bottom - 1), # Check Bottom-Left Tile 1 additional pixel above self
+                self.map_ref.get_tile_at(self.pos_rect.centerx, self.pos_rect.bottom - 1), # Check Bottom-Center Tile 1 additional pixel above self
+                self.map_ref.get_tile_at(self.pos_rect.right, self.pos_rect.bottom - 1) # Check Bottom-Right Tile 1 additional pixel above self
             ]
 
             for tile_id in surrounding_tiles:
