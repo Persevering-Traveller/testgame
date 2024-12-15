@@ -9,12 +9,16 @@ import constants
 
 LIFE_UP_COIN_AMT = 100
 FONT_SIZE = 10
+TEXT_X = 70
+TEXT_PLAY_Y = 95
+TEXT_QUIT_Y = 105
+TITLE_CURSOR_X = TEXT_X - 10
 
 class Game():
     def __init__(self) -> None:
         pygame.init()
 
-        self.state = constants.GAMESTATE.GAMEPLAY # TODO Change this to title once I have it setup
+        self.state = constants.GAMESTATE.TITLE
         
         self.window_size = 4
         # Screen has to come before canvas because Surface.convert() needs a window display first
@@ -28,6 +32,13 @@ class Game():
         self.hud = HUD()
         self.pickup = Pickup()
         self.player = Player()
+
+        self.title_logo_surf = None
+        self.title_cursor_surf = None
+        self.title_cursor_locations = []
+        self.title_cursor_selection = 0
+        self.title_play_text_surf = None
+        self.title_quit_text_surf = None
 
         # Should this be on the player?
         self.score = 0
@@ -43,10 +54,32 @@ class Game():
         self.pickup.load()
         self.player.load()
         self.player.set_map_ref(self.map)
+
+        self.title_play_text_surf = self.game_font.render("Play", False, "white")
+        self.title_quit_text_surf = self.game_font.render("Quit", False, "white")
+        self.title_cursor_locations.append(pygame.Rect(TITLE_CURSOR_X, TEXT_PLAY_Y, 8, 8))
+        self.title_cursor_locations.append(pygame.Rect(TITLE_CURSOR_X, TEXT_QUIT_Y, 8, 8))
+        #self.title_cursor_surf = pygame.image.load().convert()
+        self.title_cursor_surf = self.game_font.render(">", False, "white")
     
     def update(self, dt) -> None:
          match self.state:
-            # TODO TITLE state should handle up, down, and select input
+            case constants.GAMESTATE.TITLE:
+                keys = pygame.key.get_just_pressed()
+
+                if keys[pygame.K_w]:
+                    # Move selection cursor up
+                    self.title_cursor_selection = abs((self.title_cursor_selection - 1) % len(self.title_cursor_locations))
+                if keys[pygame.K_s]:
+                    # Move selection cursor down
+                    self.title_cursor_selection = (self.title_cursor_selection + 1) % len(self.title_cursor_locations)
+                if keys[pygame.K_RETURN] or keys[pygame.K_j]:
+                    # Read selection and change state/quit accordingly
+                    if self.title_cursor_selection == 0:
+                        self.state = constants.GAMESTATE.GAMEPLAY
+                    else:
+                        # Will be captured by main's checking for QUIT
+                        pygame.event.post(pygame.Event(pygame.QUIT)) # I find it a little silly that I have to turn this known constant into a proper pygame Event
             case constants.GAMESTATE.GAMEPLAY:
                 self.hud.update(dt)
                 self.pickup.update(dt)
@@ -55,9 +88,14 @@ class Game():
             # TODO GAMEOVER state shouldn't have any controls, just have a timer and then go back to TITLE state
 
     def draw(self) -> None:
-
         match self.state:
-            # TODO TITLE state should draw Title screen stuff
+            case constants.GAMESTATE.TITLE:
+                self.canvas.fill(pygame.color.Color(0, 0, 0)) # Background -- Black
+
+                self.canvas.blit(self.title_play_text_surf, (TEXT_X, TEXT_PLAY_Y))
+                self.canvas.blit(self.title_quit_text_surf, (TEXT_X, TEXT_QUIT_Y))
+                self.canvas.blit(self.title_cursor_surf, self.title_cursor_locations[self.title_cursor_selection])
+                
             case constants.GAMESTATE.GAMEPLAY:
                 self.canvas.fill(pygame.color.Color(128, 128, 255)) # Good ol' Cornflower Blue!
 
