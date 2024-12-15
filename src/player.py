@@ -58,33 +58,34 @@ class Player():
 
         last_dir = self.direction
         
-        keys = pygame.key.get_pressed()
+        pressed_keys = pygame.key.get_pressed()
+        just_p_keys = pygame.key.get_just_pressed()
 
         match self.current_state:
             case PLAYERSTATES.IDLE:
-                if keys[pygame.K_a]:
+                if pressed_keys[pygame.K_a]:
                     if self.is_grounded:
                         self.current_state = PLAYERSTATES.MOVING
                     self.direction = -1
-                if keys[pygame.K_d]:
+                if pressed_keys[pygame.K_d]:
                     if self.is_grounded:
                         self.current_state = PLAYERSTATES.MOVING
                     self.direction = 1
-                if keys[pygame.K_j]:
+                if just_p_keys[pygame.K_j]:
                     self.current_state = PLAYERSTATES.JUMPING
                     self.is_grounded = False
                     self.y_velocity = self.jump_force
             case PLAYERSTATES.MOVING:
-                if keys[pygame.K_a]:
+                if pressed_keys[pygame.K_a]:
                     self.direction = -1
-                if keys[pygame.K_d]:
+                if pressed_keys[pygame.K_d]:
                     self.direction = 1
-                if keys[pygame.K_j]:
+                if just_p_keys[pygame.K_j]:
                     self.current_state = PLAYERSTATES.JUMPING
                     self.is_grounded = False
                     self.y_velocity = self.jump_force
 
-                if not keys[pygame.K_a] and not keys[pygame.K_d]:
+                if not pressed_keys[pygame.K_a] and not pressed_keys[pygame.K_d]:
                     # Don't change state back to idle until the player has reached 0 X velocity on the ground (or close to)
                     if self.is_grounded:
                         if abs(self.x_velocity) < 0.25: # TODO Play with this value some more
@@ -99,12 +100,12 @@ class Player():
                         else:
                             self.x_velocity -= self.deacceleration * dt
             case PLAYERSTATES.JUMPING:
-                if keys[pygame.K_a]:
+                if pressed_keys[pygame.K_a]:
                     self.direction = -1
-                if keys[pygame.K_d]:
+                if pressed_keys[pygame.K_d]:
                     self.direction = 1
                 
-                if not keys[pygame.K_a] and not keys[pygame.K_d]:
+                if not pressed_keys[pygame.K_a] and not pressed_keys[pygame.K_d]:
                     self.direction = 0
                     last_dir = self.direction
                     if self.x_velocity != 0:
