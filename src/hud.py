@@ -16,6 +16,8 @@ class HUD():
         self.time_font_and_icon = [] # Will hold the rects of time font on the sheet (to subdraw)
         self.time_icon_position = None
         self.time_start_position = None # Vector2
+        self.last_time = 0
+        self.time_numerals = [9, 9, 9]
 
         self.player_icons = [] # The rects for player lives, health, and coins
         self.player_lives_icon_position = None # Vector2
@@ -70,10 +72,6 @@ class HUD():
         self.score_start_position = pygame.math.Vector2(ICON_SIZE*14, self.player_coins_icon_position.y)
         
 
-    
-    def update(self, dt):
-        pass
-
     def draw(self, canvas: pygame.Surface):
         # TODO MAJOR -> Make a function that can convert an int value to the proper icon of the number
         canvas.blit(self.bg)
@@ -101,8 +99,22 @@ class HUD():
         canvas.blit(self.sheet, self.time_icon_position.xy, self.time_font_and_icon[11]) # Timer Icon
         # TODO Draw how much time the player has left correctly, for now all 9s; This should be easy, as the index is the same as the shown numerical value!
         for i in range(3):
-            canvas.blit(self.sheet, (self.time_start_position.x + (i*ICON_SIZE), self.time_start_position.y), self.time_font_and_icon[9]) # Timer Amount
+            canvas.blit(self.sheet, (self.time_start_position.x + (i*ICON_SIZE), self.time_start_position.y), self.time_font_and_icon[self.time_numerals[i]]) # Timer Amount
     
     def set_font_ref(self, font: pygame.Font):
         self.font = font
+    
+    def update_time(self, current_time):
+        time = int(current_time)
+        if self.last_time == time:
+            return
+
+        self.time_numerals[0] = time // 100 # Hundreds place
+        time = time - (self.time_numerals[0] * 100)
+        self.time_numerals[1] = time // 10 # Tens place
+        time = time - (self.time_numerals[1] * 10)
+        self.time_numerals[2] = time # Ones place
+
+        self.last_time = time
+
         

@@ -81,9 +81,11 @@ class Game():
                         # Will be captured by main's checking for QUIT
                         pygame.event.post(pygame.Event(pygame.QUIT)) # I find it a little silly that I have to turn this known constant into a proper pygame Event
             case constants.GAMESTATE.GAMEPLAY:
-                self.hud.update(dt)
+                self.hud.update_time(self.time)
                 self.pickup.update(dt)
                 self.player.update(dt)
+                self.time -= dt
+                #TODO if self.time <= 0: change state to GAMEOVER
             # TODO PAUSE state should just handle unpausing and exiting the game
             # TODO GAMEOVER state shouldn't have any controls, just have a timer and then go back to TITLE state
 
