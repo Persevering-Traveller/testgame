@@ -97,7 +97,7 @@ class HUD():
         
 
         canvas.blit(self.sheet, self.time_icon_position.xy, self.time_font_and_icon[11]) # Timer Icon
-        # TODO Draw how much time the player has left correctly, for now all 9s; This should be easy, as the index is the same as the shown numerical value!
+        # Draw how much time the player has left; This is easy, as the index is the same as the shown numerical value!
         for i in range(3):
             canvas.blit(self.sheet, (self.time_start_position.x + (i*ICON_SIZE), self.time_start_position.y), self.time_font_and_icon[self.time_numerals[i]]) # Timer Amount
     
