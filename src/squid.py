@@ -1,4 +1,3 @@
-from enum import Enum
 from actor import Actor
 from constants import ENEMYSTATES
 
