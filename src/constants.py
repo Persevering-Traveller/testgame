@@ -11,3 +11,10 @@ class GAMESTATE(Enum):
     GAMEPLAY = 1
     PAUSED = 2
     GAMEOVER = 3
+
+class ENEMYSTATES(Enum):
+    IDLE = 0
+    WALKING = 1
+    ATTACKING = 2
+    HURT = 3
+    DEAD = 4
