@@ -1,4 +1,6 @@
-assets/
+assets/fonts
+assets/maps
+assets/sprites
 bin/
 include
 lib/
