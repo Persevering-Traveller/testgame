@@ -3,6 +3,7 @@ A simple platformer game using Open Game Art and Pygame-CE. This project is a wa
 
 ## Current Features
 * A moving and jumping player using states for input and animation
+* Animated Coin (but not collectable, YET...)
 * A classic retro HUD style is displayed
 * 2D tilemap collision and reaction(!!!! Thank you, [Jonathan Whiting!](https://jonathanwhiting.com/tutorial/collision/))
 * Loading a single screen game level from CSV (Thank you, [Tiled!](https://www.mapeditor.org/))
