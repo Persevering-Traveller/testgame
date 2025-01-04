@@ -28,6 +28,13 @@ class Squid(Actor):
         
         self.anim_frames.append(pygame.Rect(0, SPRITE_FRAME_SIZE, SPRITE_FRAME_SIZE, SPRITE_FRAME_SIZE))
     
+    def update(self, dt):
+        self.anim_counter += dt
+
+        # TODO add AI and physics for squid
+        self.x_collision_check(self.x_velocity)
+        self.y_collision_check(self.y_velocity)
+
     def draw(self, canvas):
         # TODO Do state-based drawing
         canvas.blit(self.sprite, (self.pos_rect.x, self.pos_rect.y), self.anim_frames[self.anim_index])
