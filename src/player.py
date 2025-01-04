@@ -86,36 +86,23 @@ class Player(Actor):
         match self.current_state:
             case PLAYERSTATES.IDLE:
                 self.anim_index = 0
-                # For facing left, we need to get the subsurface image, flip only that image, then blit that image to the canvas
-                if self.facing < 0:
-                    frame_to_flip = self.sprite.subsurface(self.anim_frames[self.anim_index])
-                    canvas.blit(pygame.transform.flip(frame_to_flip, True, False), (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET))
-                else:
-                    canvas.blit(self.sprite, (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET), self.anim_frames[self.anim_index])
             case PLAYERSTATES.MOVING:
                 if self.anim_index < 1 or self.anim_index > 3: self.anim_index = 1 # The Starting frame for Moving animation
-                if self.facing < 0:
-                    frame_to_flip = self.sprite.subsurface(self.anim_frames[self.anim_index])
-                    canvas.blit(pygame.transform.flip(frame_to_flip, True, False), (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET))
-                else:
-                    canvas.blit(self.sprite, (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET), self.anim_frames[self.anim_index])
+                
                 if self.anim_counter >= self.anim_speed:
                     self.anim_index += 1
                     self.anim_counter = 0.0
             case PLAYERSTATES.JUMPING:
                 self.anim_index = 4
-                if self.facing < 0:
-                    frame_to_flip = self.sprite.subsurface(self.anim_frames[self.anim_index])
-                    canvas.blit(pygame.transform.flip(frame_to_flip, True, False), (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET))
-                else:
-                    canvas.blit(self.sprite, (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET), self.anim_frames[self.anim_index])
             case PLAYERSTATES.HURT | PLAYERSTATES.DIED:
                 self.anim_index = 5
-                if self.facing < 0:
-                    frame_to_flip = self.sprite.subsurface(self.anim_frames[self.anim_index])
-                    canvas.blit(pygame.transform.flip(frame_to_flip, True, False), (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET))
-                else:
-                    canvas.blit(self.sprite, (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET), self.anim_frames[self.anim_index])
+                
+        # For facing left, we need to get the subsurface image, flip only that image, then blit that image to the canvas
+        if self.facing < 0:
+            frame_to_flip = self.sprite.subsurface(self.anim_frames[self.anim_index])
+            canvas.blit(pygame.transform.flip(frame_to_flip, True, False), (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET))
+        else:
+            canvas.blit(self.sprite, (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET), self.anim_frames[self.anim_index])
             
 
     def move_left_right(self, pressed_keys):
