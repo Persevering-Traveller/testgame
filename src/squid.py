@@ -10,6 +10,8 @@ class Squid(Actor):
 
         self.health = 1
 
+        self.anim_speed = 0.2 # TODO play with this value
+
         self.current_state = ENEMYSTATES.WALKING
     
     # TODO Create and update where the squid simply walks left and right and turns around at walls
