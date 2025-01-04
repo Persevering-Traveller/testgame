@@ -5,6 +5,7 @@ from map import Map
 from hud import HUD
 from pickups import Pickup
 from player import Player
+from squid import Squid
 import constants
 
 LIFE_UP_COIN_AMT = 100
@@ -32,6 +33,7 @@ class Game():
         self.hud = HUD()
         self.pickup = Pickup()
         self.player = Player()
+        self.enemy = Squid()
 
         self.title_logo_surf = None
         self.title_cursor_surf = None
@@ -53,7 +55,9 @@ class Game():
         self.hud.load()
         self.pickup.load()
         self.player.load()
+        self.enemy.load()
         self.player.set_map_ref(self.map)
+        self.enemy.set_map_ref(self.map)
 
         self.title_play_text_surf = self.game_font.render("Play", False, "white")
         self.title_quit_text_surf = self.game_font.render("Quit", False, "white")
@@ -84,6 +88,7 @@ class Game():
                 self.hud.update_time(self.time)
                 self.pickup.update(dt)
                 self.player.update(dt)
+                self.enemy.update(dt)
                 self.time -= dt
                 #TODO if self.time <= 0: change state to GAMEOVER
             # TODO PAUSE state should just handle unpausing and exiting the game
@@ -104,6 +109,7 @@ class Game():
                 self.map.draw(self.canvas)
                 self.pickup.draw(self.canvas)
                 self.player.draw(self.canvas)
+                self.enemy.draw(self.canvas)
 
                 self.hud.draw(self.canvas)
                 
