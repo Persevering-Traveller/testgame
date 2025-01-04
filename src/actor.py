@@ -5,6 +5,7 @@ class Actor():
     def __init__(self) -> None:
         self.sprite = None # Main spritesheet surface
         self.anim_frames = []
+        self.anim_index = 0
         self.anim_speed = 0.1
         self.anim_counter = 0.0
         self.pos_rect = None # pygame.Rect; Position and Collision Rect
