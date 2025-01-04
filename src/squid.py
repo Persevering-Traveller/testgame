@@ -40,5 +40,5 @@ class Squid(Actor):
         canvas.blit(self.sprite, (self.pos_rect.x, self.pos_rect.y), self.anim_frames[self.anim_index])
 
         if self.anim_counter >= self.anim_speed:
-            self.anim_index += 1
+            self.anim_index = (self.anim_index + 1) % 2
             self.anim_counter = 0
