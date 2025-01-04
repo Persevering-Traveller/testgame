@@ -35,6 +35,7 @@ class Actor():
     # each step
     def x_collision_check(self, velocity):
         sub_x_vel_acc = int(velocity)
+        collision = False
         
         for i in range(abs(sub_x_vel_acc)): # NOTE Fun thing about python, you can give this for a negative number and uh....WATCH OUT
             if sub_x_vel_acc > 0: # Move them in the direction they were heading, right or left
@@ -44,7 +45,6 @@ class Actor():
 
             # Checks the tiles left and right of collision rect at 3 points(Top, Center, and Bottom) for collidable tiles
             # If one is found, collision flag will be true and used for collision reaction
-            collision = False
             surrounding_tiles = [
                 self.map_ref.get_tile_at(self.pos_rect.left, self.pos_rect.top), # Check Top-Left Tile
                 self.map_ref.get_tile_at(self.pos_rect.left, self.pos_rect.centery), # Check Center-Left Tile
@@ -65,10 +65,11 @@ class Actor():
                 else:
                     self.pos_rect.move_ip(1, 0) # if heading left, push back right
             
-            return collision
+        return collision
 
     def y_collision_check(self, velocity):
         sub_y_vel_acc = int(velocity)
+        collision = False
         
         for i in range(abs(sub_y_vel_acc)):
             if sub_y_vel_acc > 0: # Move one pixel in the direction they were heading: down or up
@@ -78,7 +79,6 @@ class Actor():
 
             # Checks the tiles above and below the collision rect at 3 points(Left, Center, and Right) for collidable tiles.
             # If one is found, collision flag will become true and used for collision reaction 
-            collision = False
             surrounding_tiles = [
                 self.map_ref.get_tile_at(self.pos_rect.left, self.pos_rect.top), # Check Top-Left Tile
                 self.map_ref.get_tile_at(self.pos_rect.centerx, self.pos_rect.top), # Check Top-Center Tile
@@ -101,7 +101,7 @@ class Actor():
                     self.pos_rect.move_ip(0, 1) # if moving up, and collision, push back down
                     self.y_velocity = 0
 
-            return collision   
+        return collision   
     
     # Three main functions to be overloaded
     def load(self):
