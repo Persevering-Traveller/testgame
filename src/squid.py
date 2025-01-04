@@ -27,3 +27,11 @@ class Squid(Actor):
             self.anim_frames.append(pygame.Rect(SPRITE_FRAME_SIZE * i, 0, SPRITE_FRAME_SIZE, SPRITE_FRAME_SIZE)) # Walking
         
         self.anim_frames.append(pygame.Rect(0, SPRITE_FRAME_SIZE, SPRITE_FRAME_SIZE, SPRITE_FRAME_SIZE))
+    
+    def draw(self, canvas):
+        # TODO Do state-based drawing
+        canvas.blit(self.sprite, (self.pos_rect.x, self.pos_rect.y), self.anim_frames[self.anim_index])
+
+        if self.anim_counter >= self.anim_speed:
+            self.anim_index += 1
+            self.anim_counter = 0
