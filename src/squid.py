@@ -4,18 +4,19 @@ from constants import ENEMYSTATES
 
 SPRITE_FRAME_SIZE = 16
 
+MAX_X_VELOCITY = 1.5
+
 class Squid(Actor):
     def __init__(self):
         super().__init__()
 
         self.health = 1
-
+        self.direction = -1 # Start move left (in direction of player)
+        self.acceleration = 10.0
+        
         self.anim_speed = 0.2 # TODO play with this value
 
         self.current_state = ENEMYSTATES.WALKING
-    
-    # TODO Create and update where the squid simply walks left and right and turns around at walls
-    # Should they care about ledges?
 
     # They can be taken out by being jumped on
     # They hurt the player if they run into their sides or they fall on the player (if they don't care about ledges)
@@ -33,9 +34,22 @@ class Squid(Actor):
     def update(self, dt):
         self.anim_counter += dt
 
-        # TODO add AI and physics for squid
-        self.x_collision_check(self.x_velocity)
+        self.y_velocity += self.gravity * dt
+        self.x_velocity += self.direction * self.acceleration * dt
+
+        # Checks to see if they touch a wall...
+        bump_into_wall = self.x_collision_check(self.x_velocity)
         self.y_collision_check(self.y_velocity)
+
+        # ...And turns around if so
+        # Undecided on whether they should turn back at a pitfall...
+        if bump_into_wall:
+            self.direction *= -1
+            self.x_velocity = 0
+        
+        # Cap movement speed
+        if abs(self.x_velocity) >= MAX_X_VELOCITY:
+            self.x_velocity = MAX_X_VELOCITY * self.direction
 
     def draw(self, canvas):
         # TODO Do state-based drawing
