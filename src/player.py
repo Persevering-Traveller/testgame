@@ -69,12 +69,8 @@ class Player(Actor):
             if self.direction < 0: self.facing = -1
             else: self.facing = 1
 
-        if self.x_velocity > 0:
-            if self.x_velocity >= MAX_X_VELOCITY:
-                self.x_velocity = MAX_X_VELOCITY
-        else:
-            if self.x_velocity <= -MAX_X_VELOCITY:
-                self.x_velocity = -MAX_X_VELOCITY
+        if abs(self.x_velocity) >= MAX_X_VELOCITY:
+            self.x_velocity = MAX_X_VELOCITY * self.direction
         
         self.x_collision_check(self.x_velocity)
         self.y_collision_check(self.y_velocity)
