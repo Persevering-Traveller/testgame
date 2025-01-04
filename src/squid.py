@@ -52,9 +52,12 @@ class Squid(Actor):
             self.x_velocity = MAX_X_VELOCITY * self.direction
 
     def draw(self, canvas):
-        # TODO Do state-based drawing
-        canvas.blit(self.sprite, (self.pos_rect.x, self.pos_rect.y), self.anim_frames[self.anim_index])
+        match self.current_state:
+            case ENEMYSTATES.WALKING:
+                if self.anim_counter >= self.anim_speed:
+                    self.anim_index = (self.anim_index + 1) % 2
+                    self.anim_counter = 0
+            case ENEMYSTATES.DEAD:
+                self.anim_index = 2
 
-        if self.anim_counter >= self.anim_speed:
-            self.anim_index = (self.anim_index + 1) % 2
-            self.anim_counter = 0
+        canvas.blit(self.sprite, (self.pos_rect.x, self.pos_rect.y), self.anim_frames[self.anim_index])
