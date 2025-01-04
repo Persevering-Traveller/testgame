@@ -64,6 +64,8 @@ class Actor():
                     self.pos_rect.move_ip(-1, 0) # If heading right, push back left
                 else:
                     self.pos_rect.move_ip(1, 0) # if heading left, push back right
+            
+            return collision
 
     def y_collision_check(self, velocity):
         sub_y_vel_acc = int(velocity)
@@ -97,7 +99,9 @@ class Actor():
                     self.y_velocity = 0
                 else:
                     self.pos_rect.move_ip(0, 1) # if moving up, and collision, push back down
-                    self.y_velocity = 0   
+                    self.y_velocity = 0
+
+            return collision   
     
     # Three main functions to be overloaded
     def load(self):
