@@ -95,7 +95,7 @@ class Player(Actor):
                     frame_to_flip = self.sprite.subsurface(self.anim_frames[self.anim_index])
                     canvas.blit(pygame.transform.flip(frame_to_flip, True, False), (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET))
                 else:
-                    canvas.blit(self.sprite, (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET), self.anim_frames[self.anim_index].scale_by(1, 1))
+                    canvas.blit(self.sprite, (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET), self.anim_frames[self.anim_index])
             case PLAYERSTATES.MOVING:
                 if self.anim_index < 1 or self.anim_index > 3: self.anim_index = 1 # The Starting frame for Moving animation
                 if self.facing < 0:
