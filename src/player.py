@@ -12,8 +12,6 @@ class PLAYERSTATES(Enum):
     WIN = 5
     PAUSED = 6
 
-COLLISION_WIDTH = 14
-COLLISION_HEIGHT = 16
 SPRITE_FRAME_SIZE = 32
 MAX_X_VELOCITY = 2.0
 MAX_Y_VELOCITY = 2.0 # TODO play with and change these values (the velocity)
@@ -31,7 +29,7 @@ class Player(Actor):
 
     def load(self):
         self.sprite = pygame.image.load("../assets/sprites/player-sheet.png").convert_alpha()
-        self.pos_rect = pygame.Rect(80, 80, COLLISION_WIDTH, COLLISION_HEIGHT)
+        self.pos_rect = pygame.Rect(80, 80, self.collision_dimensions[0], self.collision_dimensions[1])
 
         self.anim_frames.append(pygame.Rect(0, 0, SPRITE_FRAME_SIZE, SPRITE_FRAME_SIZE)) # Idle
         for i in range(3):
