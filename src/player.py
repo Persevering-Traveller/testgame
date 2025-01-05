@@ -12,7 +12,6 @@ class PLAYERSTATES(Enum):
     WIN = 5
     PAUSED = 6
 
-SPRITE_FRAME_SIZE = 32
 MAX_X_VELOCITY = 2.0
 MAX_Y_VELOCITY = 2.0 # TODO play with and change these values (the velocity)
 SUB_STEP_VELOCITY = 4
@@ -31,11 +30,11 @@ class Player(Actor):
         self.sprite = pygame.image.load("../assets/sprites/player-sheet.png").convert_alpha()
         self.pos_rect = pygame.Rect(80, 80, self.collision_dimensions[0], self.collision_dimensions[1])
 
-        self.anim_frames.append(pygame.Rect(0, 0, SPRITE_FRAME_SIZE, SPRITE_FRAME_SIZE)) # Idle
+        self.anim_frames.append(pygame.Rect(0, 0, self.sprite_frame_size, self.sprite_frame_size)) # Idle
         for i in range(3):
-            self.anim_frames.append(pygame.Rect(SPRITE_FRAME_SIZE * i, SPRITE_FRAME_SIZE, SPRITE_FRAME_SIZE, SPRITE_FRAME_SIZE)) # Moving
-        self.anim_frames.append(pygame.Rect(0, SPRITE_FRAME_SIZE * 2, SPRITE_FRAME_SIZE, SPRITE_FRAME_SIZE)) # Jumping
-        self.anim_frames.append(pygame.Rect(0, SPRITE_FRAME_SIZE * 3, SPRITE_FRAME_SIZE, SPRITE_FRAME_SIZE)) # Hurt and Dying
+            self.anim_frames.append(pygame.Rect(self.sprite_frame_size * i, self.sprite_frame_size, self.sprite_frame_size, self.sprite_frame_size)) # Moving
+        self.anim_frames.append(pygame.Rect(0, self.sprite_frame_size * 2, self.sprite_frame_size, self.sprite_frame_size)) # Jumping
+        self.anim_frames.append(pygame.Rect(0, self.sprite_frame_size * 3, self.sprite_frame_size, self.sprite_frame_size)) # Hurt and Dying
         print(self.anim_frames)
 
     def update(self, dt):
