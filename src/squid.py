@@ -2,8 +2,6 @@ import pygame
 from actor import Actor
 from constants import ENEMYSTATES
 
-SPRITE_FRAME_SIZE = 16
-
 MAX_X_VELOCITY = 1.5
 
 class Squid(Actor):
@@ -14,8 +12,10 @@ class Squid(Actor):
         self.health = 1
         self.direction = -1 # Start move left (in direction of player)
         self.acceleration = 10.0
+        self.sprite_frame_size = 16
         
         self.anim_speed = 0.2 # TODO play with this value
+        self.collision_dimensions = (12, 12)
 
         self.current_state = ENEMYSTATES.WALKING
 
@@ -25,12 +25,12 @@ class Squid(Actor):
 
     def load(self):
         self.sprite = pygame.image.load("../assets/sprites/enemy-squid-sheet.png")
-        self.pos_rect = pygame.Rect(112, 80, SPRITE_FRAME_SIZE, SPRITE_FRAME_SIZE) # TODO Make collision shape better fit to sprite
+        self.pos_rect = pygame.Rect(112, 80, self.collision_dimensions[0], self.collision_dimensions[1]) # TODO Make collision shape better fit to sprite
         
         for i in range(2):
-            self.anim_frames.append(pygame.Rect(SPRITE_FRAME_SIZE * i, 0, SPRITE_FRAME_SIZE, SPRITE_FRAME_SIZE)) # Walking
+            self.anim_frames.append(pygame.Rect(self.sprite_frame_size * i, 0, self.sprite_frame_size, self.sprite_frame_size)) # Walking
         
-        self.anim_frames.append(pygame.Rect(0, SPRITE_FRAME_SIZE, SPRITE_FRAME_SIZE, SPRITE_FRAME_SIZE))
+        self.anim_frames.append(pygame.Rect(0, self.sprite_frame_size, self.sprite_frame_size, self.sprite_frame_size))
     
     def update(self, dt):
         self.anim_counter += dt
