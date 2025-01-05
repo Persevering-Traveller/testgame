@@ -5,6 +5,7 @@ class Actor():
     def __init__(self) -> None:
         self.sprite = None # Main spritesheet surface
         self.sprite_offset = (9, 9) # An x,y pair, by default it's the player's offset
+        self.sprite_frame_size = 32 # The width and height of a frame, by default it's the player's
         self.anim_frames = []
         self.anim_index = 0
         self.anim_speed = 0.1
