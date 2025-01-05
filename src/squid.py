@@ -34,6 +34,8 @@ class Squid(Actor):
     def update(self, dt):
         self.anim_counter += dt
 
+        self.facing = self.direction
+
         self.y_velocity += self.gravity * dt
         self.x_velocity += self.direction * self.acceleration * dt
 
@@ -60,7 +62,7 @@ class Squid(Actor):
             case ENEMYSTATES.DEAD:
                 self.anim_index = 2
 
-        if self.direction < 0:
+        if self.facing < 0:
             frame_to_flip = self.sprite.subsurface(self.anim_frames[self.anim_index])
             canvas.blit(pygame.transform.flip(frame_to_flip, True, False), (self.pos_rect.x, self.pos_rect.y))
         else:
