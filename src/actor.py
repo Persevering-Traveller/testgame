@@ -10,6 +10,7 @@ class Actor():
         self.anim_speed = 0.1
         self.anim_counter = 0.0
         self.pos_rect = None # pygame.Rect; Position and Collision Rect
+        self.collision_dimensions = (14, 16) # Width and Height of pos_rect, by default the player's w&h
         self.map_ref = None # A reference to the map (game level) for collision checking
 
         self.health = 1 # All actors should probably take at least one hit
