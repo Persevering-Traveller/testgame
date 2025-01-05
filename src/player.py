@@ -98,6 +98,8 @@ class Player(Actor):
         
         # Actual blit code held in the Actor class's draw
         super().draw(canvas)
+        # DEBUG
+        pygame.draw.rect(canvas, "red", self.pos_rect, 1)
 
     def move_left_right(self, pressed_keys):
         if pressed_keys[pygame.K_a]:
