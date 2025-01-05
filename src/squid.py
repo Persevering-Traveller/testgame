@@ -8,14 +8,14 @@ class Squid(Actor):
     def __init__(self):
         super().__init__()
 
-        self.sprite_offset = (2, -2)
+        self.sprite_offset = (2, 3)
         self.health = 1
         self.direction = -1 # Start move left (in direction of player)
         self.acceleration = 10.0
         self.sprite_frame_size = 16
         
         self.anim_speed = 0.2 # TODO play with this value
-        self.collision_dimensions = (12, 12)
+        self.collision_dimensions = (12, 11)
 
         self.current_state = ENEMYSTATES.WALKING
 
@@ -25,8 +25,7 @@ class Squid(Actor):
 
     def load(self):
         self.sprite = pygame.image.load("../assets/sprites/enemy-squid-sheet.png")
-        self.pos_rect = pygame.Rect(112, 80, self.collision_dimensions[0], self.collision_dimensions[1]) # TODO Make collision shape better fit to sprite
-        
+        self.pos_rect = pygame.Rect(112, 80, self.collision_dimensions[0], self.collision_dimensions[1])        
         for i in range(2):
             self.anim_frames.append(pygame.Rect(self.sprite_frame_size * i, 0, self.sprite_frame_size, self.sprite_frame_size)) # Walking
         
