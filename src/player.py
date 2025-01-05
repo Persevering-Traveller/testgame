@@ -15,7 +15,6 @@ class PLAYERSTATES(Enum):
 COLLISION_WIDTH = 14
 COLLISION_HEIGHT = 16
 SPRITE_FRAME_SIZE = 32
-SPRITE_OFFSET = 9 # The collision rect is 9x9 inwards on a frame
 MAX_X_VELOCITY = 2.0
 MAX_Y_VELOCITY = 2.0 # TODO play with and change these values (the velocity)
 SUB_STEP_VELOCITY = 4
@@ -96,14 +95,9 @@ class Player(Actor):
                 self.anim_index = 4
             case PLAYERSTATES.HURT | PLAYERSTATES.DIED:
                 self.anim_index = 5
-                
-        # For facing left, we need to get the subsurface image, flip only that image, then blit that image to the canvas
-        if self.facing < 0:
-            frame_to_flip = self.sprite.subsurface(self.anim_frames[self.anim_index])
-            canvas.blit(pygame.transform.flip(frame_to_flip, True, False), (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET))
-        else:
-            canvas.blit(self.sprite, (self.pos_rect.x - SPRITE_OFFSET, self.pos_rect.y - SPRITE_OFFSET), self.anim_frames[self.anim_index])
-            
+        
+        # Actual blit code held in the Actor class's draw
+        super().draw(canvas)
 
     def move_left_right(self, pressed_keys):
         if pressed_keys[pygame.K_a]:

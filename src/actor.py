@@ -4,6 +4,7 @@ import constants
 class Actor():
     def __init__(self) -> None:
         self.sprite = None # Main spritesheet surface
+        self.sprite_offset = (9, 9) # An x,y pair, by default it's the player's offset
         self.anim_frames = []
         self.anim_index = 0
         self.anim_speed = 0.1
@@ -110,5 +111,11 @@ class Actor():
     def update(self, dt):
         pass
 
+    # The base sprite drawing and flipping, meant to be called by child's draw call
     def draw(self, canvas: pygame.Surface):
-        pass
+        # For facing left, we need to get the subsurface image, flip only that image, then blit that image to the canvas
+        if self.facing < 0:
+            frame_to_flip = self.sprite.subsurface(self.anim_frames[self.anim_index])
+            canvas.blit(pygame.transform.flip(frame_to_flip, True, False), (self.pos_rect.x - self.sprite_offset[0], self.pos_rect.y - self.sprite_offset[1]))
+        else:
+            canvas.blit(self.sprite, (self.pos_rect.x - self.sprite_offset[0], self.pos_rect.y - self.sprite_offset[1]), self.anim_frames[self.anim_index])

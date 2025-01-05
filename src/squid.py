@@ -62,8 +62,5 @@ class Squid(Actor):
             case ENEMYSTATES.DEAD:
                 self.anim_index = 2
 
-        if self.facing < 0:
-            frame_to_flip = self.sprite.subsurface(self.anim_frames[self.anim_index])
-            canvas.blit(pygame.transform.flip(frame_to_flip, True, False), (self.pos_rect.x, self.pos_rect.y))
-        else:
-            canvas.blit(self.sprite, (self.pos_rect.x, self.pos_rect.y), self.anim_frames[self.anim_index])
+        # Actual blitting happens with the Actor's draw
+        super().draw(canvas)
