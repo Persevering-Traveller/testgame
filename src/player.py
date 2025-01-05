@@ -83,11 +83,11 @@ class Player(Actor):
             case PLAYERSTATES.IDLE:
                 self.anim_index = 0
             case PLAYERSTATES.MOVING:
-                if self.anim_index < 1 or self.anim_index > 3: self.anim_index = 1 # The Starting frame for Moving animation
-                
                 if self.anim_counter >= self.anim_speed:
                     self.anim_index += 1
                     self.anim_counter = 0.0
+                    
+                if self.anim_index < 1 or self.anim_index > 3: self.anim_index = 1 # The Starting frame for Moving animation
             case PLAYERSTATES.JUMPING:
                 self.anim_index = 4
             case PLAYERSTATES.HURT | PLAYERSTATES.DIED:
@@ -96,7 +96,7 @@ class Player(Actor):
         # Actual blit code held in the Actor class's draw
         super().draw(canvas)
         # DEBUG
-        pygame.draw.rect(canvas, "red", self.pos_rect, 1)
+        #pygame.draw.rect(canvas, "red", self.pos_rect, 1)
 
     def move_left_right(self, pressed_keys):
         if pressed_keys[pygame.K_a]:
