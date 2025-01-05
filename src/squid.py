@@ -10,6 +10,7 @@ class Squid(Actor):
     def __init__(self):
         super().__init__()
 
+        self.sprite_offset = (2, -2)
         self.health = 1
         self.direction = -1 # Start move left (in direction of player)
         self.acceleration = 10.0
@@ -64,3 +65,5 @@ class Squid(Actor):
 
         # Actual blitting happens with the Actor's draw
         super().draw(canvas)
+        # DEBUG
+        pygame.draw.rect(canvas, "red", self.pos_rect, 1)
