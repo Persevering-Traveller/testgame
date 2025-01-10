@@ -14,6 +14,11 @@ TEXT_X = 70
 TEXT_PLAY_Y = 95
 TEXT_QUIT_Y = 105
 TITLE_CURSOR_X = TEXT_X - 10
+PAUSE_SURF_WIDTH = 81
+PAUSE_SURF_HEIGHT = 20
+PAUSE_X = 41
+PAUSE_Y = 68
+PAUSE_TEXT_PADDING = 5
 
 class Game():
     def __init__(self) -> None:
@@ -42,6 +47,9 @@ class Game():
         self.title_play_text_surf = None
         self.title_quit_text_surf = None
 
+        self.pause_surf = None
+        self.pause_text = None
+
         # Should this be on the player?
         self.score = 0
         self.lives = 3 # player lives
@@ -65,12 +73,16 @@ class Game():
         self.title_cursor_locations.append(pygame.Rect(TITLE_CURSOR_X, TEXT_QUIT_Y, 8, 8))
         #self.title_cursor_surf = pygame.image.load().convert()
         self.title_cursor_surf = self.game_font.render(">", False, "white")
+
+        self.pause_surf = pygame.Surface((PAUSE_SURF_WIDTH, PAUSE_SURF_HEIGHT)).convert()
+        self.pause_surf.fill("black")
+        self.pause_text = self.game_font.render("[ P A U S E D ]", False, "white")
+        self.pause_surf.blit(self.pause_text, (PAUSE_TEXT_PADDING, PAUSE_TEXT_PADDING))
     
     def update(self, dt) -> None:
-         match self.state:
+        keys = pygame.key.get_just_pressed()
+        match self.state:
             case constants.GAMESTATE.TITLE:
-                keys = pygame.key.get_just_pressed()
-
                 if keys[pygame.K_w]:
                     # Move selection cursor up
                     self.title_cursor_selection = abs((self.title_cursor_selection - 1) % len(self.title_cursor_locations))
@@ -85,13 +97,19 @@ class Game():
                         # Will be captured by main's checking for QUIT
                         pygame.event.post(pygame.Event(pygame.QUIT)) # I find it a little silly that I have to turn this known constant into a proper pygame Event
             case constants.GAMESTATE.GAMEPLAY:
+                if keys[pygame.K_ESCAPE]:
+                    self.state = constants.GAMESTATE.PAUSED
                 self.hud.update_time(self.time)
                 self.pickup.update(dt)
                 self.player.update(dt)
                 self.enemy.update(dt)
                 self.time -= dt
                 #TODO if self.time <= 0: change state to GAMEOVER
-            # TODO PAUSE state should just handle unpausing and exiting the game
+            case constants.GAMESTATE.PAUSED:
+                if keys[pygame.K_ESCAPE]:
+                    self.state = constants.GAMESTATE.GAMEPLAY
+                if keys[pygame.K_RETURN]:
+                    pygame.event.post(pygame.Event(pygame.QUIT))
             # TODO GAMEOVER state shouldn't have any controls, just have a timer and then go back to TITLE state
 
     def draw(self) -> None:
@@ -112,8 +130,10 @@ class Game():
                 self.enemy.draw(self.canvas)
 
                 self.hud.draw(self.canvas)
+            
+            case constants.GAMESTATE.PAUSED:
+                self.canvas.blit(self.pause_surf, (PAUSE_X, PAUSE_Y))
                 
-            # TODO PAUSE state should draw the pause screen (just dim it and write 'paused')
             # TODO GAMEOVER state should draw Game Over screen stuff
 
         # draw canvas to the screen scaled to the same size as the screen(window)
