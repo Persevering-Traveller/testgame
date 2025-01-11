@@ -22,21 +22,23 @@ class Pickup():
         self.anim_counter = 0 # Used to count frames
 
         self.awake = True # Like actor's awake flag
-        self.current_state = PICKUPSTATE.COLLECTED
+        self.current_state = PICKUPSTATE.IDLE
         self.point_val = 100
 
     def load(self):
         self.pos_rect = pygame.Rect(64, 56, SPRITE_SIZE, SPRITE_SIZE) # TODO load this in from some file actually, for now "center" screen
         self.sprite = pygame.image.load("../assets/sprites/pickup-coin-sheet.png").convert_alpha()
-        for i in range(4):
-            self.anim_frames.append(pygame.Rect(i*SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE))
+        for i in range(8):
+            self.anim_frames.append(pygame.Rect((i%ANIM_FRAME_COUNT)*SPRITE_SIZE, (i//ANIM_FRAME_COUNT)*SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE))
 
     def update(self, dt):
         if(not self.awake): 
            return
         
-        if self.pos_rect.colliderect(self.player_rect_ref):
+        # Have to check current state or anim_index will set back to collected start frame while still colliding
+        if self.pos_rect.colliderect(self.player_rect_ref) and self.current_state != PICKUPSTATE.COLLECTED:
             self.current_state = PICKUPSTATE.COLLECTED
+            self.anim_index = ANIM_COLLECTED_FRAME_START
             pygame.event.post(pygame.Event(constants.CUSTOMEVENTS.PICKUP_COLLECTED))
 
         self.anim_counter += dt
@@ -49,6 +51,8 @@ class Pickup():
                 if self.anim_index != 7:
                     self.anim_index += 1
                     #self.anim_index = ((self.anim_index + 1) % ANIM_FRAME_COUNT) + ANIM_COLLECTED_FRAME_START
+                else:
+                    self.awake = False
             self.anim_counter = 0
 
     def draw(self, canvas):
