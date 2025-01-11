@@ -52,7 +52,7 @@ class Map():
         tile_y = y // TILE_SIZE
     
         tile_index = (tile_y * CANVAS_WIDTH//TILE_SIZE) + tile_x
-        print(f"Tile Index is: {tile_index} -- tile_x: {tile_x}, tile_y: {tile_y}")
+        #print(f"Tile Index is: {tile_index} -- tile_x: {tile_x}, tile_y: {tile_y}")
 
         tile_id = self.level[tile_index]
         return tile_id
