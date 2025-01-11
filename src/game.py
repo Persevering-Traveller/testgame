@@ -106,6 +106,10 @@ class Game():
                 self.enemy.update(dt)
                 self.time -= dt
                 #TODO if self.time <= 0: change state to GAMEOVER
+
+                for event in pygame.event.get():
+                    if event.type == constants.CUSTOMEVENTS.PICKUP_COLLECTED:
+                        self.score += self.pickup.point_val
             case constants.GAMESTATE.PAUSED:
                 if keys[pygame.K_ESCAPE]:
                     self.state = constants.GAMESTATE.GAMEPLAY
