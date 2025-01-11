@@ -108,8 +108,12 @@ class Game():
                 for event in pygame.event.get():
                     if event.type == constants.CUSTOMEVENTS.PICKUP_COLLECTED:
                         self.score += self.pickup.point_val
+                        self.coins += 1
                         self.hud.update_score(self.score)
-                        self.hud.update_coins()
+                        if self.coins == 100:
+                            self.coins = 0
+                            self.lives += 1
+                        self.hud.update_coins(self.coins)
             case constants.GAMESTATE.PAUSED:
                 if keys[pygame.K_ESCAPE]:
                     self.state = constants.GAMESTATE.GAMEPLAY
