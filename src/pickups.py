@@ -12,6 +12,7 @@ ANIM_COLLECTED_FRAME_START = 3 # Technically the 4th frame, but the math starts 
 class Pickup():
     def __init__(self) -> None:
         self.pos_rect = None # Rect -- It's collision shape and location
+        self.player_rect_ref = None
 
         self.sprite = None # Surface
         self.anim_frames = []
@@ -43,3 +44,6 @@ class Pickup():
 
     def draw(self, canvas):
         canvas.blit(self.sprite, self.pos_rect, self.anim_frames[self.anim_index])
+    
+    def set_player_ref(self, player):
+        self.player_rect_ref = player
