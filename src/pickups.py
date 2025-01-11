@@ -1,4 +1,5 @@
 import pygame
+import constants
 
 SPRITE_SIZE = 16
 ANIM_FRAME_COUNT = 4
@@ -36,6 +37,7 @@ class Pickup():
         
         if self.pos_rect.colliderect(self.player_rect_ref):
             self.awake = False
+            pygame.event.post(pygame.Event(constants.CUSTOMEVENTS.PICKUP_COLLECTED))
 
         self.anim_counter += dt
         if self.anim_counter >= self.anim_speed:
