@@ -1,3 +1,4 @@
+from enum import Enum
 import pygame
 import constants
 
@@ -5,10 +6,9 @@ SPRITE_SIZE = 16
 ANIM_FRAME_COUNT = 4
 ANIM_COLLECTED_FRAME_START = 3 # Technically the 4th frame, but the math starts by adding 1, so it still equals to 4
 
-# You know, it's a good question -> Does the player test to see if it collides with the coin
-# or does the coin test to see if it collided with the player?
-# TODO Add a method to give pos_rect so you can test if the player collides with it
-# TODO Add a method to give point_val
+class PICKUPSTATE(Enum):
+    IDLE = 0
+    COLLECTED = 1
 
 class Pickup():
     def __init__(self) -> None:
@@ -21,7 +21,8 @@ class Pickup():
         self.anim_speed = 0.1 # Seconds or 1 Millisecond
         self.anim_counter = 0 # Used to count frames
 
-        self.collected = False
+        self.awake = True # Like actor's awake flag
+        self.current_state = PICKUPSTATE.COLLECTED
         self.point_val = 100
 
     def load(self):
@@ -31,16 +32,16 @@ class Pickup():
             self.anim_frames.append(pygame.Rect(i*SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE))
 
     def update(self, dt):
-        if(self.collected): 
+        if(not self.awake): 
            return
         
         if self.pos_rect.colliderect(self.player_rect_ref):
-            self.collected = True
+            self.current_state = PICKUPSTATE.COLLECTED
             pygame.event.post(pygame.Event(constants.CUSTOMEVENTS.PICKUP_COLLECTED))
 
         self.anim_counter += dt
         if self.anim_counter >= self.anim_speed:
-            if not self.collected:
+            if self.current_state == PICKUPSTATE.IDLE:
                 self.anim_index = (self.anim_index + 1) % ANIM_FRAME_COUNT
             else:
                 # MATH BE KUH-RAZZZZEEEEEEEEEE Y'ALLLLLLL
@@ -51,7 +52,7 @@ class Pickup():
             self.anim_counter = 0
 
     def draw(self, canvas):
-        if(self.collected):
+        if(not self.awake):
             return
         canvas.blit(self.sprite, self.pos_rect, self.anim_frames[self.anim_index])
     
