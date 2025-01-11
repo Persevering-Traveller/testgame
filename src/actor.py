@@ -105,6 +105,9 @@ class Actor():
                     self.y_velocity = 0
 
         return collision   
+
+    def get_pos_rect(self):
+        return self.pos_rect
     
     # Three main functions to be overloaded
     def load(self):
