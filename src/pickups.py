@@ -20,6 +20,7 @@ class Pickup():
         self.anim_speed = 0.1 # Seconds or 1 Millisecond
         self.anim_counter = 0 # Used to count frames
 
+        self.awake = True # same as actor awake
         self.collected = False
         self.point_val = 100
 
@@ -30,6 +31,12 @@ class Pickup():
             self.anim_frames.append(pygame.Rect(i*SPRITE_SIZE, 0, SPRITE_SIZE, SPRITE_SIZE))
 
     def update(self, dt):
+        if(not self.awake): 
+           return
+        
+        if self.pos_rect.colliderect(self.player_rect_ref):
+            self.awake = False
+
         self.anim_counter += dt
         if self.anim_counter >= self.anim_speed:
             if not self.collected:
@@ -43,6 +50,8 @@ class Pickup():
             self.anim_counter = 0
 
     def draw(self, canvas):
+        if(not self.awake):
+            return
         canvas.blit(self.sprite, self.pos_rect, self.anim_frames[self.anim_index])
     
     def set_player_ref(self, player):
