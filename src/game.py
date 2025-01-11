@@ -66,6 +66,7 @@ class Game():
         self.enemy.load()
         self.player.set_map_ref(self.map)
         self.enemy.set_map_ref(self.map)
+        self.pickup.set_player_ref(self.player.get_pos_rect())
 
         self.title_play_text_surf = self.game_font.render("Play", False, "white")
         self.title_quit_text_surf = self.game_font.render("Quit", False, "white")
