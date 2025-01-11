@@ -1,6 +1,4 @@
 import pygame
-import pygame.freetype
-import pygame.ftfont
 from map import Map
 from hud import HUD
 from pickups import Pickup
