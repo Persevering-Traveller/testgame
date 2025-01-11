@@ -95,7 +95,7 @@ class HUD():
         canvas.blit(self.coins_surf, (self.player_coins_icon_position.x + 4, self.player_coins_icon_position.y - 8)) # 'COIN' text
         canvas.blit(self.sheet, self.player_coins_icon_position.xy, self.player_icons[1]) # Coin Icon
         canvas.blit(self.sheet, self.player_coins_mult_icon_position.xy, self.player_icons[2]) # Coin Mult Icon
-        # Draw the amount of coints the player has collected
+        # Draw the amount of coins the player has collected
         for i in range(2):
             canvas.blit(self.sheet, (self.player_coins_number_start_position.x + (i * ICON_SIZE), self.player_coins_number_start_position.y), self.coins[i])
 
@@ -104,7 +104,7 @@ class HUD():
         for i in range(6):
             canvas.blit(self.sheet, (self.score_start_position.x + (i*ICON_SIZE), self.player_health_start_position.y), self.score[i]) # Score Amount
         
-
+        # Draw timer
         canvas.blit(self.sheet, self.time_icon_position.xy, self.time_font_and_icon[11]) # Timer Icon
         # Draw how much time the player has left; This is easy, as the index is the same as the shown numerical value!
         for i in range(3):
@@ -112,6 +112,28 @@ class HUD():
     
     def set_font_ref(self, font: pygame.Font):
         self.font = font
+    
+    def convert_numeral_to_surf_rect(self, number):
+        number_index = -1
+        if number == 0:
+            number_index = 9 # In the image, the layout of numbers starts from 1 and ends at 0
+        else:
+            number_index = number - 1
+        
+        if number_index == -1:
+            print("Number given can not be processed")
+            return
+        else:
+            return self.score_font[number_index]
+    
+    def update_number_array(self, amount, number_rect_array):
+        i = -1 # append from the last element
+        while(amount != 0):
+            number = amount % 10
+            number_rect_array[i] = self.convert_numeral_to_surf_rect(number)
+            print(number_rect_array)
+            i -= 1
+            amount = amount // 10
     
     def update_time(self, current_time):
         time = int(current_time)
@@ -127,7 +149,7 @@ class HUD():
         self.last_time = time
     
     def update_score(self, score):
-        pass
+        self.update_number_array(score, self.score)
 
     def update_coins(self, coins):
-        pass
+        self.update_number_array(coins, self.coins)
