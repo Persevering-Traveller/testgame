@@ -1,4 +1,5 @@
 from enum import Enum
+import pygame
 
 CANVAS_WIDTH = 160
 CANVAS_HEIGHT = 144
@@ -18,3 +19,6 @@ class ENEMYSTATES(Enum):
     ATTACKING = 2
     HURT = 3
     DEAD = 4
+
+class CUSTOMEVENTS():
+    PICKUP_COLLECTED = pygame.event.custom_type()
