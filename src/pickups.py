@@ -39,6 +39,7 @@ class Pickup():
         if self.pos_rect.colliderect(self.player_rect_ref) and self.current_state != PICKUPSTATE.COLLECTED:
             self.current_state = PICKUPSTATE.COLLECTED
             self.anim_index = ANIM_COLLECTED_FRAME_START
+            self.anim_counter = self.anim_speed # Make it so that it will immediately change animation on collected
             pygame.event.post(pygame.Event(constants.CUSTOMEVENTS.PICKUP_COLLECTED))
 
         self.anim_counter += dt
