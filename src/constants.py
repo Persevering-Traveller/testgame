@@ -22,3 +22,7 @@ class ENEMYSTATES(Enum):
 
 class CUSTOMEVENTS():
     PICKUP_COLLECTED = pygame.event.custom_type()
+    ENEMY_STOMPED = pygame.event.custom_type()
+    PLAYER_HURT = pygame.event.custom_type()
+    PLAYER_DIED = pygame.event.custom_type()
+    PLAYER_REACH_GOAL = pygame.event.custom_type()
