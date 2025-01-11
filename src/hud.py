@@ -30,8 +30,8 @@ class HUD():
         self.score_font = [] # The rects for the score font
         self.score_start_position = None # Vector2
 
-        self.score = 0
-        self.coins = 0
+        self.score = []
+        self.coins = []
 
     
     def load(self):
@@ -73,6 +73,12 @@ class HUD():
             self.score_font.append(pygame.Rect((ICON_SIZE*10)+(i%5)*ICON_SIZE,(i//5)*ICON_SIZE, ICON_SIZE, ICON_SIZE))
         # Set score position
         self.score_start_position = pygame.math.Vector2(ICON_SIZE*14, self.player_coins_icon_position.y)
+
+        for i in range(6):
+            self.score.append(self.score_font[9]) # Fill the score with zeroes
+        
+        for i in range(2):
+            self.coins.append(self.score_font[9])
         
 
     def draw(self, canvas: pygame.Surface):
@@ -89,14 +95,14 @@ class HUD():
         canvas.blit(self.coins_surf, (self.player_coins_icon_position.x + 4, self.player_coins_icon_position.y - 8)) # 'COIN' text
         canvas.blit(self.sheet, self.player_coins_icon_position.xy, self.player_icons[1]) # Coin Icon
         canvas.blit(self.sheet, self.player_coins_mult_icon_position.xy, self.player_icons[2]) # Coin Mult Icon
-        # TODO Draw the amount of coints the player has collected, for now double 0, and remember, 0 is the LAST number on the sheet
-        canvas.blit(self.sheet, (self.player_coins_number_start_position.x, self.player_coins_number_start_position.y), self.score_font[9]) # Coin Amount (10s place)
-        canvas.blit(self.sheet, (self.player_coins_number_start_position.x + ICON_SIZE, self.player_coins_number_start_position.y), self.score_font[9]) # Coin Amount (1s place)
+        # Draw the amount of coints the player has collected
+        for i in range(2):
+            canvas.blit(self.sheet, (self.player_coins_number_start_position.x + (i * ICON_SIZE), self.player_coins_number_start_position.y), self.coins[i])
 
         canvas.blit(self.score_surf, (self.score_start_position.x+12, self.score_start_position.y - 8))
-        # TODO Draw the player's score correctly, for now all 0s
+        # Draw the player's score
         for i in range(6):
-            canvas.blit(self.sheet, (self.score_start_position.x + (i*ICON_SIZE), self.player_health_start_position.y), self.score_font[9]) # Score Amount
+            canvas.blit(self.sheet, (self.score_start_position.x + (i*ICON_SIZE), self.player_health_start_position.y), self.score[i]) # Score Amount
         
 
         canvas.blit(self.sheet, self.time_icon_position.xy, self.time_font_and_icon[11]) # Timer Icon
@@ -121,9 +127,7 @@ class HUD():
         self.last_time = time
     
     def update_score(self, score):
-        self.score = score
+        pass
 
-    def update_coins(self):
-        self.coins += 1
-
-        
+    def update_coins(self, coins):
+        pass
