@@ -30,6 +30,9 @@ class HUD():
         self.score_font = [] # The rects for the score font
         self.score_start_position = None # Vector2
 
+        self.score = 0
+        self.coins = 0
+
     
     def load(self):
         # NOTE Okay, this is fine for this test game, but OH MY GOD I NEVER WANNA DO THIS BY HAND EVER AGAIN (load AND draw)
@@ -116,5 +119,11 @@ class HUD():
         self.time_numerals[2] = time # Ones place
 
         self.last_time = time
+    
+    def update_score(self, score):
+        self.score = score
+
+    def update_coins(self):
+        self.coins += 1
 
         
