@@ -23,6 +23,7 @@ class Actor():
         self.x_velocity = 0.0
         self.y_velocity = 0.0
 
+        self.awake = True # Used for when actor is not dead or off-screen
         self.current_state = 0 # To be overwritten in inherited class
         self.is_grounded = True # Needed for collision checking
         self.facing = 1 # 1 for right, -1 for left
