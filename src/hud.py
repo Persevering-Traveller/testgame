@@ -131,7 +131,6 @@ class HUD():
         while(amount != 0):
             number = amount % 10
             number_rect_array[i] = self.convert_numeral_to_surf_rect(number)
-            print(number_rect_array)
             i -= 1
             amount = amount // 10
     
