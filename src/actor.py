@@ -106,6 +106,31 @@ class Actor():
                     self.y_velocity = 0
 
         return collision   
+    
+    def get_overlapping_side(self, other_rect):
+        side = None
+        x_distance = 0
+        y_distance = 0
+        if self.pos_rect.colliderect(other_rect):
+            x_distance = self.pos_rect.center[0] - other_rect.center[0]
+            y_distance = self.pos_rect.center[1] - other_rect.center[1]
+            #print(f"X Dist: {x_distance} | Y Dist: {y_distance}")
+
+            # Which side is pushed in more, Left/Right or Top/Bottom?
+            if abs(x_distance) > abs(y_distance):
+                if x_distance < 0:
+                    side = constants.COLLISIONSIDE.LEFT
+                else:
+                    side = constants.COLLISIONSIDE.RIGHT
+            else:
+                if y_distance < 0:
+                    side = constants.COLLISIONSIDE.TOP
+                else:
+                    side = constants.COLLISIONSIDE.BOTTOM
+
+        
+        #print(f"Side is: {side}")
+        return side
 
     def get_pos_rect(self):
         return self.pos_rect
