@@ -115,6 +115,9 @@ class Game():
                             self.coins = 0
                             self.lives += 1
                         self.hud.update_coins(self.coins)
+                    if event.type == constants.CUSTOMEVENTS.ENEMY_STOMPED:
+                        self.score += self.enemy.squashed_point_val
+                        self.hud.update_score(self.score)
             case constants.GAMESTATE.PAUSED:
                 if keys[pygame.K_ESCAPE]:
                     self.state = constants.GAMESTATE.GAMEPLAY
