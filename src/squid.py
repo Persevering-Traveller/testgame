@@ -18,6 +18,8 @@ class Squid(Actor):
         self.anim_speed = 0.2 # TODO play with this value
         self.collision_dimensions = (12, 11)
 
+        self.squashed_point_val = 100 # TODO Make this a member on the Enemy class
+
         self.current_state = constants.ENEMYSTATES.WALKING
 
         self.player_ref_rect = None
@@ -48,6 +50,7 @@ class Squid(Actor):
                 if overlapping_side == constants.COLLISIONSIDE.TOP:
                     self.y_velocity = self.pushback_force_y
                     self.x_velocity = -self.direction * self.pushback_force_x
+                    pygame.event.post(pygame.Event(constants.CUSTOMEVENTS.ENEMY_STOMPED))
                     self.current_state = constants.ENEMYSTATES.DEAD
                     # TODO play death sound effect
                     return
