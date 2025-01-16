@@ -1,9 +1,10 @@
 import pygame
 from actor import Actor
-from constants import ENEMYSTATES
+from constants import ENEMYSTATES, COLLISIONSIDE
 
 MAX_X_VELOCITY = 1.5
 
+# TODO make an Enemy class that's a child of Actor so all Enemies will check if player overlaps on their head
 class Squid(Actor):
     def __init__(self):
         super().__init__()
@@ -19,6 +20,8 @@ class Squid(Actor):
 
         self.current_state = ENEMYSTATES.WALKING
 
+        self.player_ref_rect = None
+
     # They can be taken out by being jumped on
     # They hurt the player if they run into their sides or they fall on the player (if they don't care about ledges)
     # Worth 100(?) points
@@ -32,26 +35,41 @@ class Squid(Actor):
         self.anim_frames.append(pygame.Rect(0, self.sprite_frame_size, self.sprite_frame_size, self.sprite_frame_size))
     
     def update(self, dt):
-        self.anim_counter += dt
+        match self.current_state:
+            case ENEMYSTATES.WALKING:
+                self.anim_counter += dt
 
-        self.facing = self.direction
+                self.facing = self.direction
 
-        self.y_velocity += self.gravity * dt
-        self.x_velocity += self.direction * self.acceleration * dt
+                self.y_velocity += self.gravity * dt
+                self.x_velocity += self.direction * self.acceleration * dt
 
-        # Checks to see if they touch a wall...
-        bump_into_wall = self.x_collision_check(self.x_velocity)
-        self.y_collision_check(self.y_velocity)
+                overlapping_side = self.get_overlapping_side(self.player_ref_rect)
+                if overlapping_side == COLLISIONSIDE.TOP:
+                    self.y_velocity = self.pushback_force_y
+                    self.x_velocity = -self.direction * self.pushback_force_x
+                    self.current_state = ENEMYSTATES.DEAD
+                    # TODO play death sound effect
+                    return
 
-        # ...And turns around if so
-        # Undecided on whether they should turn back at a pitfall...
-        if bump_into_wall:
-            self.direction *= -1
-            self.x_velocity = 0
-        
-        # Cap movement speed
-        if abs(self.x_velocity) >= MAX_X_VELOCITY:
-            self.x_velocity = MAX_X_VELOCITY * self.direction
+
+                # Checks to see if they touch a wall...
+                bump_into_wall = self.x_collision_check(self.x_velocity)
+                self.y_collision_check(self.y_velocity)
+
+                # ...And turns around if so
+                # Undecided on whether they should turn back at a pitfall...
+                if bump_into_wall:
+                    self.direction *= -1
+                    self.x_velocity = 0
+                
+                # Cap movement speed
+                if abs(self.x_velocity) >= MAX_X_VELOCITY:
+                    self.x_velocity = MAX_X_VELOCITY * self.direction
+            case ENEMYSTATES.DEAD:
+                # Don't check for collisions, just fall off the screen
+                self.pos_rect.move_ip(self.x_velocity, self.y_velocity)
+                self.y_velocity += self.gravity * dt
 
     def draw(self, canvas):
         match self.current_state:
@@ -66,3 +84,6 @@ class Squid(Actor):
         super().draw(canvas)
         # DEBUG
         pygame.draw.rect(canvas, "red", self.pos_rect, 1)
+    
+    def set_player_ref(self, player_rect):
+        self.player_ref_rect = player_rect
