@@ -1,6 +1,6 @@
 import pygame
 from actor import Actor
-from constants import ENEMYSTATES, COLLISIONSIDE
+import constants
 
 MAX_X_VELOCITY = 1.5
 
@@ -18,7 +18,7 @@ class Squid(Actor):
         self.anim_speed = 0.2 # TODO play with this value
         self.collision_dimensions = (12, 11)
 
-        self.current_state = ENEMYSTATES.WALKING
+        self.current_state = constants.ENEMYSTATES.WALKING
 
         self.player_ref_rect = None
 
@@ -36,7 +36,7 @@ class Squid(Actor):
     
     def update(self, dt):
         match self.current_state:
-            case ENEMYSTATES.WALKING:
+            case constants.ENEMYSTATES.WALKING:
                 self.anim_counter += dt
 
                 self.facing = self.direction
@@ -45,10 +45,10 @@ class Squid(Actor):
                 self.x_velocity += self.direction * self.acceleration * dt
 
                 overlapping_side = self.get_overlapping_side(self.player_ref_rect)
-                if overlapping_side == COLLISIONSIDE.TOP:
+                if overlapping_side == constants.COLLISIONSIDE.TOP:
                     self.y_velocity = self.pushback_force_y
                     self.x_velocity = -self.direction * self.pushback_force_x
-                    self.current_state = ENEMYSTATES.DEAD
+                    self.current_state = constants.ENEMYSTATES.DEAD
                     # TODO play death sound effect
                     return
 
@@ -66,18 +66,18 @@ class Squid(Actor):
                 # Cap movement speed
                 if abs(self.x_velocity) >= MAX_X_VELOCITY:
                     self.x_velocity = MAX_X_VELOCITY * self.direction
-            case ENEMYSTATES.DEAD:
+            case constants.ENEMYSTATES.DEAD:
                 # Don't check for collisions, just fall off the screen
                 self.pos_rect.move_ip(self.x_velocity, self.y_velocity)
                 self.y_velocity += self.gravity * dt
 
     def draw(self, canvas):
         match self.current_state:
-            case ENEMYSTATES.WALKING:
+            case constants.ENEMYSTATES.WALKING:
                 if self.anim_counter >= self.anim_speed:
                     self.anim_index = (self.anim_index + 1) % 2
                     self.anim_counter = 0
-            case ENEMYSTATES.DEAD:
+            case constants.ENEMYSTATES.DEAD:
                 self.anim_index = 2
 
         # Actual blitting happens with the Actor's draw
