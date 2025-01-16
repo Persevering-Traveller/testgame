@@ -118,12 +118,12 @@ class Actor():
 
             # Which side is pushed in more, Left/Right or Top/Bottom?
             if abs(x_distance) > abs(y_distance):
-                if x_distance < 0:
+                if x_distance > 0:
                     side = constants.COLLISIONSIDE.LEFT
                 else:
                     side = constants.COLLISIONSIDE.RIGHT
             else:
-                if y_distance < 0:
+                if y_distance > 0:
                     side = constants.COLLISIONSIDE.TOP
                 else:
                     side = constants.COLLISIONSIDE.BOTTOM
