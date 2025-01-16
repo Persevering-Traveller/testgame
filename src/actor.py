@@ -20,6 +20,8 @@ class Actor():
         self.deacceleration = 15
         self.gravity = 9.81
         self.jump_force = 0.0 # Not all actors can jump
+        self.pushback_force_x = 1.5 # When player is hurt or if any actor dies
+        self.pushback_force_y = -2.5 # ^^^^^
         self.x_velocity = 0.0
         self.y_velocity = 0.0
 
