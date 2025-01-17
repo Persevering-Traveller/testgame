@@ -26,6 +26,7 @@ class CUSTOMEVENTS():
     PLAYER_HURT = pygame.event.custom_type()
     PLAYER_DIED = pygame.event.custom_type()
     PLAYER_REACH_GOAL = pygame.event.custom_type()
+    TIMER_ENDED = pygame.event.custom_type()
 
 class COLLISIONSIDE(Enum):
     LEFT = 0
