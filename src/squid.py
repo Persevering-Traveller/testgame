@@ -1,11 +1,10 @@
 import pygame
-from actor import Actor
+from enemy import Enemy
 import constants
 
 MAX_X_VELOCITY = 1.5
 
-# TODO make an Enemy class that's a child of Actor so all Enemies will check if player overlaps on their head
-class Squid(Actor):
+class Squid(Enemy):
     def __init__(self):
         super().__init__()
 
@@ -23,10 +22,7 @@ class Squid(Actor):
         self.current_state = constants.ENEMYSTATES.WALKING
 
         self.player_ref_rect = None
-
-    # They can be taken out by being jumped on
-    # They hurt the player if they run into their sides or they fall on the player (if they don't care about ledges)
-    # Worth 100(?) points
+        # Default 100 points for being stomped
 
     def load(self):
         self.sprite = pygame.image.load("../assets/sprites/enemy-squid-sheet.png")
@@ -46,15 +42,9 @@ class Squid(Actor):
                 self.y_velocity += self.gravity * dt
                 self.x_velocity += self.direction * self.acceleration * dt
 
-                overlapping_side = self.get_overlapping_side(self.player_ref_rect)
-                if overlapping_side == constants.COLLISIONSIDE.TOP:
-                    self.y_velocity = self.pushback_force_y
-                    self.x_velocity = -self.direction * self.pushback_force_x
-                    pygame.event.post(pygame.Event(constants.CUSTOMEVENTS.ENEMY_STOMPED))
-                    self.current_state = constants.ENEMYSTATES.DEAD
+                if self.stomp_check():
                     # TODO play death sound effect
-                    return
-
+                    return # Early return so x and y velocity aren't overwritten
 
                 # Checks to see if they touch a wall...
                 bump_into_wall = self.x_collision_check(self.x_velocity)
@@ -87,6 +77,3 @@ class Squid(Actor):
         super().draw(canvas)
         # DEBUG
         pygame.draw.rect(canvas, "red", self.pos_rect, 1)
-    
-    def set_player_ref(self, player_rect):
-        self.player_ref_rect = player_rect
