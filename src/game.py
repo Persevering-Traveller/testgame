@@ -104,6 +104,7 @@ class Game():
                 self.pickup.update(dt)
                 self.player.update(dt)
                 self.enemy.update(dt)
+                constants.TIMER_MANAGER.update(dt)
                 self.time -= dt
                 #TODO if self.time <= 0: change state to GAMEOVER
 
