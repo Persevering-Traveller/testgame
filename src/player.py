@@ -26,6 +26,8 @@ class Player(Actor):
 
         self.current_state = PLAYERSTATES.IDLE
 
+        self.enemy_ref = None # TODO Get list of awake enemies from Enemy Manager when created
+
     def load(self):
         self.sprite = pygame.image.load("../assets/sprites/player-sheet.png").convert_alpha()
         self.pos_rect = pygame.Rect(80, 80, self.collision_dimensions[0], self.collision_dimensions[1])
@@ -70,6 +72,22 @@ class Player(Actor):
         
         self.x_collision_check(self.x_velocity)
         self.y_collision_check(self.y_velocity)
+
+        # TODO Check for overlapping only on awake enemies
+        overlapping_side = self.get_overlapping_side(self.enemy_ref)
+        if overlapping_side != None:
+            # Player can be hurt from left, right, and top sides, but not bottom
+            if overlapping_side != constants.COLLISIONSIDE.BOTTOM: 
+                self.health -= 1
+                self.x_velocity = -self.direction * self.pushback_force_x
+                self.y_velocity = self.pushback_force_y
+                # TODO make check for if player's health is now 0, hurt if not, dead if so
+                self.current_state = PLAYERSTATES.HURT
+            else: # Bounce off enemies like jumping
+                self.y_velocity = self.jump_force
+                self.is_grounded = False
+                self.current_state = PLAYERSTATES.JUMPING
+
 
         # Screen Boundaries ; Temporary
         if self.pos_rect.x < 0: self.pos_rect.x = 0
