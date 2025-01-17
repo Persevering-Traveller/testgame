@@ -108,7 +108,7 @@ class Game():
                 self.time -= dt
                 #TODO if self.time <= 0: change state to GAMEOVER
 
-                for event in pygame.event.get():
+                for event in pygame.event.get([constants.CUSTOMEVENTS.PICKUP_COLLECTED, constants.CUSTOMEVENTS.ENEMY_STOMPED]):
                     if event.type == constants.CUSTOMEVENTS.PICKUP_COLLECTED:
                         self.score += self.pickup.point_val
                         self.coins += 1
@@ -120,6 +120,8 @@ class Game():
                     if event.type == constants.CUSTOMEVENTS.ENEMY_STOMPED:
                         self.score += self.enemy.squashed_point_val
                         self.hud.update_score(self.score)
+                    #if event.type == constants.CUSTOMEVENTS.TIMER_ENDED:
+                    #    print("The game saw Timer Ended")
             case constants.GAMESTATE.PAUSED:
                 if keys[pygame.K_ESCAPE]:
                     self.state = constants.GAMESTATE.GAMEPLAY
