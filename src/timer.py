@@ -1,14 +1,12 @@
 import pygame
 import constants
 
-IN_SECONDS = 1000
-
 class Timer():
     def __init__(self, id, end_time = 0):
         self.id = id
         self.started = False
         self.accumulator = 0
-        self.end_time = end_time * IN_SECONDS
+        self.end_time = end_time
     
     def start(self):
         self.started = True
@@ -22,7 +20,7 @@ class Timer():
     
     def set_new_time(self, new_time):
         self.stop()
-        self.end_time = new_time * IN_SECONDS
+        self.end_time = new_time
     
     def update(self, dt):
         if not self.started: return
