@@ -28,6 +28,8 @@ class Player(Actor):
 
         self.enemy_ref = None # TODO Get list of awake enemies from Enemy Manager when created
 
+        self.hurt_timer = None
+
     def load(self):
         self.sprite = pygame.image.load("../assets/sprites/player-sheet.png").convert_alpha()
         self.pos_rect = pygame.Rect(80, 80, self.collision_dimensions[0], self.collision_dimensions[1])
@@ -38,6 +40,7 @@ class Player(Actor):
         self.anim_frames.append(pygame.Rect(0, self.sprite_frame_size * 2, self.sprite_frame_size, self.sprite_frame_size)) # Jumping
         self.anim_frames.append(pygame.Rect(0, self.sprite_frame_size * 3, self.sprite_frame_size, self.sprite_frame_size)) # Hurt and Dying
         print(self.anim_frames)
+        self.hurt_timer = constants.TIMER_MANAGER.new_timer(1)
 
     def update(self, dt):
         self.anim_counter += dt # Needed here for animation
@@ -75,18 +78,28 @@ class Player(Actor):
 
         # TODO Check for overlapping only on awake enemies
         overlapping_side = self.get_overlapping_side(self.enemy_ref)
-        if overlapping_side != None:
+        if overlapping_side != None and self.current_state != PLAYERSTATES.HURT:
             # Player can be hurt from left, right, and top sides, but not bottom
             if overlapping_side != constants.COLLISIONSIDE.BOTTOM: 
                 self.health -= 1
                 self.x_velocity = -self.direction * self.pushback_force_x
                 self.y_velocity = self.pushback_force_y
-                # TODO make check for if player's health is now 0, hurt if not, dead if so
-                self.current_state = PLAYERSTATES.HURT
+                if self.health > 0:
+                    pygame.event.post(pygame.Event(constants.CUSTOMEVENTS.PLAYER_HURT))
+                    constants.TIMER_MANAGER.start_timer(self.hurt_timer)
+                    self.current_state = PLAYERSTATES.HURT
+                else:
+                    pygame.event.post(pygame.Event(constants.CUSTOMEVENTS.PLAYER_DIED))
+                    self.current_state = PLAYERSTATES.DIED
             else: # Bounce off enemies like jumping
                 self.y_velocity = self.jump_force
                 self.is_grounded = False
                 self.current_state = PLAYERSTATES.JUMPING
+        
+        for event in pygame.event.get(constants.CUSTOMEVENTS.TIMER_ENDED):
+            if event.type == constants.CUSTOMEVENTS.TIMER_ENDED:
+                if event.dict["id"] == self.hurt_timer:
+                   self.current_state = PLAYERSTATES.IDLE
 
 
         # Screen Boundaries ; Temporary
@@ -95,6 +108,7 @@ class Player(Actor):
 
         if self.pos_rect.y < -32: self.pos_rect.y = -32
         elif self.pos_rect.y + self.pos_rect.height > 144: self.pos_rect.y = 144 - self.pos_rect.height
+
 
     def draw(self, canvas: pygame.Surface):
         match self.current_state:
