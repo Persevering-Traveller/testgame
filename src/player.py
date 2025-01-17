@@ -100,6 +100,9 @@ class Player(Actor):
             if event.type == constants.CUSTOMEVENTS.TIMER_ENDED:
                 if event.dict["id"] == self.hurt_timer:
                    self.current_state = PLAYERSTATES.IDLE
+                else:
+                    # If its not the hurt timer, put it back in the event queue
+                    pygame.event.post(pygame.Event(constants.CUSTOMEVENTS.TIMER_ENDED))
 
 
         # Screen Boundaries ; Temporary
