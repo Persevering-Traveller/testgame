@@ -92,7 +92,9 @@ class Player(Actor):
 
         # TODO Check for overlapping only on awake enemies
         overlapping_side = self.get_overlapping_side(self.enemy_ref)
-        if overlapping_side != None and self.current_state != PLAYERSTATES.HURT:
+        if (overlapping_side != None and 
+            self.current_state != PLAYERSTATES.HURT and 
+            self.current_state != PLAYERSTATES.DIED):
             # Player can be hurt from left, right, and top sides, but not bottom
             if overlapping_side != constants.COLLISIONSIDE.BOTTOM: 
                 self.health -= 1
@@ -112,7 +114,7 @@ class Player(Actor):
                     pygame.event.post(pygame.Event(constants.CUSTOMEVENTS.PLAYER_HURT))
                     constants.TIMER_MANAGER.start_timer(self.hurt_timer)
                     self.current_state = PLAYERSTATES.HURT
-                else:
+                elif self.health <= 0:
                     pygame.event.post(pygame.Event(constants.CUSTOMEVENTS.PLAYER_DIED))
                     self.current_state = PLAYERSTATES.DIED
             else: # Bounce off enemies like jumping
@@ -136,7 +138,9 @@ class Player(Actor):
         elif self.pos_rect.x + self.pos_rect.width > 160: self.pos_rect.x = 160 - self.pos_rect.width
 
         if self.pos_rect.y < -32: self.pos_rect.y = -32
-        elif self.pos_rect.y + self.pos_rect.height > 144: self.pos_rect.y = 144 - self.pos_rect.height
+        elif self.pos_rect.y + self.pos_rect.height > 144: # if player falls in a pit
+            self.health = 0
+            self.current_state = PLAYERSTATES.DIED
 
 
     def draw(self, canvas: pygame.Surface):
