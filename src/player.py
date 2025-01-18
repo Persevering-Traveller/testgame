@@ -23,6 +23,7 @@ class Player(Actor):
         self.health = 3
 
         self.jump_force = -4.0
+        self.pushback_force_x = self.pushback_force_x * 1.2 # Fling back a little farther than normal
 
         self.current_state = PLAYERSTATES.IDLE
 
@@ -61,20 +62,33 @@ class Player(Actor):
             case PLAYERSTATES.JUMPING:
                 self.move_left_right(pressed_keys)
                 last_dir = self.deaccelerate_jumping(pressed_keys, dt)
+            case PLAYERSTATES.HURT | PLAYERSTATES.DIED:
+                pass
+
 
         self.y_velocity += self.gravity * dt
-        self.x_velocity += self.direction * self.acceleration * dt
+        if self.current_state != PLAYERSTATES.HURT and self.current_state != PLAYERSTATES.DIED:
+            self.x_velocity += self.direction * self.acceleration * dt
+        elif self.current_state == PLAYERSTATES.HURT:
+            if self.is_grounded:
+                self.x_velocity = 0
 
         # For flipping the sprite if we're facing in another direction
         if last_dir != self.direction:
             if self.direction < 0: self.facing = -1
             else: self.facing = 1
 
-        if abs(self.x_velocity) >= MAX_X_VELOCITY:
+        # Cap velocity only when not hurt or dead
+        if (abs(self.x_velocity) >= MAX_X_VELOCITY and 
+            self.current_state != PLAYERSTATES.HURT and 
+            self.current_state != PLAYERSTATES.DIED):
             self.x_velocity = MAX_X_VELOCITY * self.direction
         
-        self.x_collision_check(self.x_velocity)
-        self.y_collision_check(self.y_velocity)
+        if self.current_state != PLAYERSTATES.DIED:
+            self.x_collision_check(self.x_velocity)
+            self.y_collision_check(self.y_velocity)
+        else:
+            self.pos_rect.move_ip(self.x_velocity, self.y_velocity) # Fly off screen if dead
 
         # TODO Check for overlapping only on awake enemies
         overlapping_side = self.get_overlapping_side(self.enemy_ref)
@@ -82,7 +96,17 @@ class Player(Actor):
             # Player can be hurt from left, right, and top sides, but not bottom
             if overlapping_side != constants.COLLISIONSIDE.BOTTOM: 
                 self.health -= 1
-                self.x_velocity = -self.direction * self.pushback_force_x
+                match overlapping_side:
+                    case constants.COLLISIONSIDE.LEFT:
+                        self.x_velocity = self.pushback_force_x
+                    case constants.COLLISIONSIDE.RIGHT:
+                        self.x_velocity = -self.pushback_force_x
+                    case constants.COLLISIONSIDE.TOP:
+                        # TODO This needs testing
+                        if self.pos_rect.center > self.enemy_ref.pos_rect.center:
+                            self.x_velocity = self.pushback_force_x
+                        else:
+                            self.x_velocity = -self.pushback_force_x
                 self.y_velocity = self.pushback_force_y
                 if self.health > 0:
                     pygame.event.post(pygame.Event(constants.CUSTOMEVENTS.PLAYER_HURT))
@@ -93,12 +117,14 @@ class Player(Actor):
                     self.current_state = PLAYERSTATES.DIED
             else: # Bounce off enemies like jumping
                 self.y_velocity = self.jump_force
-                self.is_grounded = False
                 self.current_state = PLAYERSTATES.JUMPING
+            # Player is flung up into the air regardless of how the overlap happened
+            self.is_grounded = False
         
         for event in pygame.event.get(constants.CUSTOMEVENTS.TIMER_ENDED):
             if event.type == constants.CUSTOMEVENTS.TIMER_ENDED:
                 if event.dict["id"] == self.hurt_timer:
+                   self.direction = 0 # Needs to be set to zero or the player will float towards the last running direction
                    self.current_state = PLAYERSTATES.IDLE
                 else:
                     # If its not the hurt timer, put it back in the event queue
