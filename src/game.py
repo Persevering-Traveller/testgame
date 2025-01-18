@@ -6,7 +6,7 @@ from player import Player
 from squid import Squid
 import constants
 
-LIFE_UP_COIN_AMT = 100
+LIFE_UP_COIN_AMT = 10000
 FONT_SIZE = 10
 TEXT_X = 70
 TEXT_PLAY_Y = 95
@@ -120,10 +120,13 @@ class Game():
                         if self.coins == 100:
                             self.coins = 0
                             self.lives += 1
+                            self.hud.update_lives(self.lives)
                         self.hud.update_coins(self.coins)
+                        self.check_life_up()
                     if event.type == constants.CUSTOMEVENTS.ENEMY_STOMPED:
                         self.score += self.enemy.squashed_point_val
                         self.hud.update_score(self.score)
+                        self.check_life_up()
                     if event.type == constants.CUSTOMEVENTS.PLAYER_HURT:
                         self.hud.update_health(self.player.health)
             case constants.GAMESTATE.PAUSED:
@@ -161,3 +164,8 @@ class Game():
         self.screen.blit(pygame.transform.scale(self.canvas, self.screen.get_rect().size))
         
         pygame.display.flip()
+    
+    def check_life_up(self):
+        if self.score % LIFE_UP_COIN_AMT == 0:
+            self.lives += 1
+            self.hud.update_lives()
