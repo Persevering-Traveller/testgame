@@ -109,13 +109,14 @@ class Actor():
 
         return collision   
     
-    def get_overlapping_side(self, other_rect):
+    def get_overlapping_side(self, other):
         side = None
+        if not other.awake: return side
         x_distance = 0
         y_distance = 0
-        if self.pos_rect.colliderect(other_rect):
-            x_distance = self.pos_rect.center[0] - other_rect.center[0]
-            y_distance = self.pos_rect.center[1] - other_rect.center[1]
+        if self.pos_rect.colliderect(other.pos_rect):
+            x_distance = self.pos_rect.center[0] - other.pos_rect.center[0]
+            y_distance = self.pos_rect.center[1] - other.pos_rect.center[1]
             #print(f"X Dist: {x_distance} | Y Dist: {y_distance}")
 
             # Which side is pushed in more, Left/Right or Top/Bottom?
