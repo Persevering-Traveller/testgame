@@ -127,8 +127,11 @@ class Game():
                         self.score += self.enemy.squashed_point_val
                         self.hud.update_score(self.score)
                         self.check_life_up()
-                    if event.type == constants.CUSTOMEVENTS.PLAYER_HURT:
+                    if event.type == constants.CUSTOMEVENTS.PLAYER_HURT or event.type == constants.CUSTOMEVENTS.PLAYER_DIED:
                         self.hud.update_health(self.player.health)
+                    if event.type == constants.CUSTOMEVENTS.PLAYER_DIED:
+                        self.lives -= 1
+                        self.hud.update_lives(self.lives)
             case constants.GAMESTATE.PAUSED:
                 if keys[pygame.K_ESCAPE]:
                     self.state = constants.GAMESTATE.GAMEPLAY
