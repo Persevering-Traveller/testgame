@@ -35,6 +35,7 @@ class HUD():
         self.score_font = [] # The rects for the score font
         self.score_start_position = None # Vector2
 
+        self.lives = None
         self.hearts = []
         self.score = []
         self.coins = []
@@ -80,6 +81,8 @@ class HUD():
         # Set score position
         self.score_start_position = pygame.math.Vector2(ICON_SIZE*14, self.player_coins_icon_position.y)
 
+        self.lives = self.score_font[2]
+        
         for i in range(3):
             self.hearts.append(self.player_icons[ICON_HEART_FULL])
 
@@ -91,13 +94,12 @@ class HUD():
         
 
     def draw(self, canvas: pygame.Surface):
-        # TODO MAJOR -> Make a function that can convert an int value to the proper icon of the number
         canvas.blit(self.bg)
         canvas.blit(self.sheet, self.player_lives_icon_position.xy, self.player_icons[0]) # Player Icon
-        # TODO Draw the correct number for how many lives, for now just 3
-        canvas.blit(self.sheet, self.player_lives_number_position.xy, self.score_font[2]) # Player Lives Amount
+        # Draw the number of lives the player has
+        canvas.blit(self.sheet, self.player_lives_number_position.xy, self.lives) # Player Lives Amount
 
-        # TODO Draw the correct health amount (filled in if full, empty if less), for now draw all filled hearts
+        # Draw the health amount
         for i in range(3):
             canvas.blit(self.sheet, (self.player_health_start_position.x + (i*ICON_SIZE), self.player_health_start_position.y), self.hearts[i]) # Player Health Icons
         
@@ -170,3 +172,6 @@ class HUD():
         while(i < MAX_HEALTH):
             self.hearts[i] = self.player_icons[ICON_HEART_EMPTY]
             i += 1
+    
+    def update_lives(self, lives):
+        self.lives = self.convert_numeral_to_surf_rect(lives)
