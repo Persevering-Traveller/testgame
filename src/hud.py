@@ -3,6 +3,9 @@ import constants
 
 ICON_SIZE = 8
 
+ICON_HEART_FULL = 3
+ICON_HEART_EMPTY = 4
+
 class HUD():
     def __init__(self) -> None:
         self.bg = None # Will hold the hud's bg (a literal black bar)
@@ -30,6 +33,7 @@ class HUD():
         self.score_font = [] # The rects for the score font
         self.score_start_position = None # Vector2
 
+        self.hearts = []
         self.score = []
         self.coins = []
 
@@ -74,6 +78,9 @@ class HUD():
         # Set score position
         self.score_start_position = pygame.math.Vector2(ICON_SIZE*14, self.player_coins_icon_position.y)
 
+        for i in range(3):
+            self.hearts.append(self.player_icons[ICON_HEART_FULL])
+
         for i in range(6):
             self.score.append(self.score_font[9]) # Fill the score with zeroes
         
@@ -90,7 +97,7 @@ class HUD():
 
         # TODO Draw the correct health amount (filled in if full, empty if less), for now draw all filled hearts
         for i in range(3):
-            canvas.blit(self.sheet, (self.player_health_start_position.x + (i*ICON_SIZE), self.player_health_start_position.y), self.player_icons[3]) # Player Health Icons
+            canvas.blit(self.sheet, (self.player_health_start_position.x + (i*ICON_SIZE), self.player_health_start_position.y), self.hearts[i]) # Player Health Icons
         
         canvas.blit(self.coins_surf, (self.player_coins_icon_position.x + 4, self.player_coins_icon_position.y - 8)) # 'COIN' text
         canvas.blit(self.sheet, self.player_coins_icon_position.xy, self.player_icons[1]) # Coin Icon
