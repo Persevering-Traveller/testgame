@@ -42,7 +42,7 @@ class Squid(Enemy):
                 self.y_velocity += self.gravity * dt
                 self.x_velocity += self.direction * self.acceleration * dt
 
-                if self.stomp_check():
+                if self.stomp_check(): # From Enemy class
                     # TODO play death sound effect
                     return # Early return so x and y velocity aren't overwritten
 
