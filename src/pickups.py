@@ -13,7 +13,7 @@ class PICKUPSTATE(Enum):
 class Pickup():
     def __init__(self) -> None:
         self.pos_rect = None # Rect -- It's collision shape and location
-        self.player_rect_ref = None
+        self.player_ref = None
 
         self.sprite = None # Surface
         self.anim_frames = []
@@ -36,11 +36,12 @@ class Pickup():
            return
         
         # Have to check current state or anim_index will set back to collected start frame while still colliding
-        if self.pos_rect.colliderect(self.player_rect_ref) and self.current_state != PICKUPSTATE.COLLECTED:
-            self.current_state = PICKUPSTATE.COLLECTED
-            self.anim_index = ANIM_COLLECTED_FRAME_START
-            self.anim_counter = self.anim_speed # Make it so that it will immediately change animation on collected
-            pygame.event.post(pygame.Event(constants.CUSTOMEVENTS.PICKUP_COLLECTED))
+        if self.player_ref.awake:
+            if self.pos_rect.colliderect(self.player_ref.pos_rect) and self.current_state != PICKUPSTATE.COLLECTED:
+                self.current_state = PICKUPSTATE.COLLECTED
+                self.anim_index = ANIM_COLLECTED_FRAME_START
+                self.anim_counter = self.anim_speed # Make it so that it will immediately change animation on collected
+                pygame.event.post(pygame.Event(constants.CUSTOMEVENTS.PICKUP_COLLECTED))
 
         self.anim_counter += dt
         if self.anim_counter >= self.anim_speed:
@@ -62,4 +63,4 @@ class Pickup():
         canvas.blit(self.sprite, self.pos_rect, self.anim_frames[self.anim_index])
     
     def set_player_ref(self, player):
-        self.player_rect_ref = player
+        self.player_ref = player
