@@ -64,7 +64,7 @@ class Game():
         self.enemy.load()
         self.player.set_map_ref(self.map)
         self.enemy.set_map_ref(self.map)
-        self.pickup.set_player_ref(self.player.get_pos_rect())
+        self.pickup.set_player_ref(self.player)
         self.enemy.set_player_ref(self.player)
         self.player.enemy_ref = self.enemy # TODO delete this after setting up Enemy Manager
 
