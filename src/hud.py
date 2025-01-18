@@ -6,6 +6,8 @@ ICON_SIZE = 8
 ICON_HEART_FULL = 3
 ICON_HEART_EMPTY = 4
 
+MAX_HEALTH = 3
+
 class HUD():
     def __init__(self) -> None:
         self.bg = None # Will hold the hud's bg (a literal black bar)
@@ -159,3 +161,12 @@ class HUD():
 
     def update_coins(self, coins):
         self.update_number_array(coins, self.coins)
+    
+    def update_health(self, health):
+        i = 0
+        while(i < health):
+            self.hearts[i] = self.player_icons[ICON_HEART_FULL]
+            i += 1
+        while(i < MAX_HEALTH):
+            self.hearts[i] = self.player_icons[ICON_HEART_EMPTY]
+            i += 1
