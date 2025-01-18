@@ -110,6 +110,7 @@ class Player(Actor):
                         else:
                             self.x_velocity = -self.pushback_force_x
                 self.y_velocity = self.pushback_force_y
+                self.awake = False
                 if self.health > 0:
                     pygame.event.post(pygame.Event(constants.CUSTOMEVENTS.PLAYER_HURT))
                     constants.TIMER_MANAGER.start_timer(self.hurt_timer)
@@ -126,6 +127,7 @@ class Player(Actor):
         for event in pygame.event.get(constants.CUSTOMEVENTS.TIMER_ENDED):
             if event.type == constants.CUSTOMEVENTS.TIMER_ENDED:
                 if event.dict["id"] == self.hurt_timer:
+                   self.awake = True
                    self.direction = 0 # Needs to be set to zero or the player will float towards the last running direction
                    self.current_state = PLAYERSTATES.IDLE
                 else:

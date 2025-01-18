@@ -21,6 +21,7 @@ class Enemy(Actor):
             self.health -= 1
             if self.health <= 0:
                 pygame.event.post(pygame.Event(constants.CUSTOMEVENTS.ENEMY_STOMPED))
+                self.awake = False
                 self.current_state = constants.ENEMYSTATES.DEAD
             else:
                 self.current_state = constants.ENEMYSTATES.HURT
