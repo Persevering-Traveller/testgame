@@ -65,8 +65,8 @@ class Game():
         self.player.set_map_ref(self.map)
         self.enemy.set_map_ref(self.map)
         self.pickup.set_player_ref(self.player.get_pos_rect())
-        self.enemy.set_player_ref(self.player.get_pos_rect())
-        self.player.enemy_ref = self.enemy.pos_rect # TODO delete this after setting up Enemy Manager
+        self.enemy.set_player_ref(self.player)
+        self.player.enemy_ref = self.enemy # TODO delete this after setting up Enemy Manager
 
         self.title_play_text_surf = self.game_font.render("Play", False, "white")
         self.title_quit_text_surf = self.game_font.render("Quit", False, "white")
