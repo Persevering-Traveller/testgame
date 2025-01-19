@@ -137,6 +137,18 @@ class Actor():
 
     def get_pos_rect(self):
         return self.pos_rect
+
+    def reset(self):
+        self.anim_index = 0
+        self.anim_counter = 0.0
+        
+        self.health = 1
+        self.direction = 0
+        self.x_velocity = 0.0
+        self.y_velocity = 0.0
+        self.awake = True
+        self.is_grounded = True
+        self.facing = 1
     
     # Three main functions to be overloaded
     def load(self):
