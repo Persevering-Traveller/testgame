@@ -17,6 +17,10 @@ PAUSE_SURF_HEIGHT = 20
 PAUSE_X = 41
 PAUSE_Y = 68
 PAUSE_TEXT_PADDING = 5
+RESET_TEXT_X = 64
+RESET_TEXT_Y = 80
+RESET_ICON_X = RESET_TEXT_X - 6
+RESET_ICON_Y = RESET_TEXT_Y - 16
 
 class Game():
     def __init__(self) -> None:
@@ -47,6 +51,11 @@ class Game():
 
         self.pause_surf = None
         self.pause_text = None
+
+        self.reset_icons = []
+        self.reset_icons_start_loc = None
+        self.reset_text_surf = None
+        self.reset_text_location = None
 
         # Should this be on the player?
         self.score = 0
@@ -81,8 +90,16 @@ class Game():
         self.pause_surf.fill("black")
         self.pause_text = self.game_font.render("[ P A U S E D ]", False, "white")
         self.pause_surf.blit(self.pause_text, (PAUSE_TEXT_PADDING, PAUSE_TEXT_PADDING))
+
+        self.reset_text_surf = self.game_font.render("Ready?", False, "white")
+        self.reset_text_location = pygame.Rect(RESET_TEXT_X, RESET_TEXT_Y, 1, 1)
+        self.reset_icons_start_loc = pygame.Rect(RESET_ICON_X, RESET_ICON_Y, 1, 1)
+        # TODO This is very hack-y, try to find a better way to do this
+        self.reset_icons = [self.hud.player_icons[0],
+                            self.hud.player_icons[2]]
     
     def update(self, dt) -> None:
+        constants.TIMER_MANAGER.update(dt)
         keys = pygame.key.get_just_pressed()
         match self.state:
             case constants.GAMESTATE.TITLE:
@@ -106,7 +123,6 @@ class Game():
                 self.pickup.update(dt)
                 self.player.update(dt)
                 self.enemy.update(dt)
-                constants.TIMER_MANAGER.update(dt)
                 self.time -= dt
                 #TODO if self.time <= 0: change state to GAMEOVER
 
@@ -133,7 +149,8 @@ class Game():
                         self.hud.update_health(self.player.health)
                     if event.type == constants.CUSTOMEVENTS.PLAYER_DIED:
                         self.lives -= 1
-                        #self.hud.update_lives(self.lives)
+                        self.hud.update_lives(self.lives)
+                        constants.TIMER_MANAGER.start_timer(self.reset_timer)
                         self.state = constants.GAMESTATE.RESET
             case constants.GAMESTATE.PAUSED:
                 if keys[pygame.K_ESCAPE]:
@@ -148,7 +165,6 @@ class Game():
                     if event.type == constants.CUSTOMEVENTS.TIMER_ENDED:
                         if event.dict["id"] == self.reset_timer:
                             self.reset()
-                            self.hud.update_lives(self.lives)
                             self.state = constants.GAMESTATE.GAMEPLAY
                         else:
                             pygame.event.post(pygame.Event(constants.CUSTOMEVENTS.TIMER_ENDED))
@@ -180,7 +196,14 @@ class Game():
                 pass
 
             case constants.GAMESTATE.RESET:
-                pass
+                self.canvas.fill(pygame.Color(0, 0, 0))
+                i = 0
+                while i < len(self.reset_icons):
+                    self.canvas.blit(self.hud.sheet, (self.reset_icons_start_loc.x + (i * 16), self.reset_icons_start_loc.y), self.reset_icons[i])
+                    i += 1
+                # Need i for easy drawing of hud's lives icon
+                self.canvas.blit(self.hud.sheet, (self.reset_icons_start_loc.x + (i * 16), self.reset_icons_start_loc.y), self.hud.lives)
+                self.canvas.blit(self.reset_text_surf, self.reset_text_location)
 
         # draw canvas to the screen scaled to the same size as the screen(window)
         self.screen.blit(pygame.transform.scale(self.canvas, self.screen.get_rect().size))
