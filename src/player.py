@@ -113,8 +113,8 @@ class Player(Actor):
                             self.x_velocity = -self.pushback_force_x
                 self.y_velocity = self.pushback_force_y
                 self.awake = False
+                pygame.event.post(pygame.Event(constants.CUSTOMEVENTS.PLAYER_HURT))
                 if self.health > 0:
-                    pygame.event.post(pygame.Event(constants.CUSTOMEVENTS.PLAYER_HURT))
                     constants.TIMER_MANAGER.start_timer(self.hurt_timer)
                     self.current_state = PLAYERSTATES.HURT
                 elif self.health <= 0:

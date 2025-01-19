@@ -145,7 +145,7 @@ class Game():
                         self.score += self.enemy.squashed_point_val
                         self.hud.update_score(self.score)
                         self.check_life_up()
-                    if event.type == constants.CUSTOMEVENTS.PLAYER_HURT or event.type == constants.CUSTOMEVENTS.PLAYER_DIED:
+                    if event.type == constants.CUSTOMEVENTS.PLAYER_HURT:
                         self.hud.update_health(self.player.health)
                     if event.type == constants.CUSTOMEVENTS.PLAYER_DIED:
                         self.lives -= 1
@@ -165,6 +165,7 @@ class Game():
                     if event.type == constants.CUSTOMEVENTS.TIMER_ENDED:
                         if event.dict["id"] == self.reset_timer:
                             self.reset()
+                            self.hud.update_health(self.player.health)
                             self.state = constants.GAMESTATE.GAMEPLAY
                         else:
                             pygame.event.post(pygame.Event(constants.CUSTOMEVENTS.TIMER_ENDED))
