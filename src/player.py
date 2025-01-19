@@ -30,6 +30,7 @@ class Player(Actor):
         self.enemy_ref = None # TODO Get list of awake enemies from Enemy Manager when created
 
         self.hurt_timer = None
+        self.start_over_timer = None
 
     def load(self):
         self.sprite = pygame.image.load("../assets/sprites/player-sheet.png").convert_alpha()
@@ -42,6 +43,7 @@ class Player(Actor):
         self.anim_frames.append(pygame.Rect(0, self.sprite_frame_size * 3, self.sprite_frame_size, self.sprite_frame_size)) # Hurt and Dying
         print(self.anim_frames)
         self.hurt_timer = constants.TIMER_MANAGER.new_timer(1)
+        self.start_over_timer = constants.TIMER_MANAGER.new_timer(2)
 
     def update(self, dt):
         self.anim_counter += dt # Needed here for animation
@@ -116,7 +118,7 @@ class Player(Actor):
                     constants.TIMER_MANAGER.start_timer(self.hurt_timer)
                     self.current_state = PLAYERSTATES.HURT
                 elif self.health <= 0:
-                    pygame.event.post(pygame.Event(constants.CUSTOMEVENTS.PLAYER_DIED))
+                    constants.TIMER_MANAGER.start_timer(self.start_over_timer)
                     self.current_state = PLAYERSTATES.DIED
             else: # Bounce off enemies like jumping
                 self.y_velocity = self.jump_force
@@ -130,8 +132,10 @@ class Player(Actor):
                    self.awake = True
                    self.direction = 0 # Needs to be set to zero or the player will float towards the last running direction
                    self.current_state = PLAYERSTATES.IDLE
+                elif event.dict["id"] == self.start_over_timer:
+                    pygame.event.post(pygame.Event(constants.CUSTOMEVENTS.PLAYER_DIED))
                 else:
-                    # If its not the hurt timer, put it back in the event queue
+                    # If its not the hurt timer or start over timer, put it back in the event queue
                     pygame.event.post(pygame.Event(constants.CUSTOMEVENTS.TIMER_ENDED))
 
 
