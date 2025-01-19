@@ -217,4 +217,9 @@ class Player(Actor):
                     self.x_velocity -= self.deacceleration * dt
             return last_dir
                 
-        
+    def reset(self):
+        super().reset()
+        self.health = 3
+        self.current_state = PLAYERSTATES.IDLE
+        self.pos_rect.x = 80
+        self.pos_rect.y = 80

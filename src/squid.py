@@ -77,3 +77,11 @@ class Squid(Enemy):
         super().draw(canvas)
         # DEBUG
         pygame.draw.rect(canvas, "red", self.pos_rect, 1)
+    
+    def reset(self):
+        super().reset()
+        self.health = 1
+        self.direction = -1
+        self.current_state = constants.ENEMYSTATES.WALKING
+        self.pos_rect.x = 112
+        self.pos_rect.y = 80

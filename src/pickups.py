@@ -64,3 +64,11 @@ class Pickup():
     
     def set_player_ref(self, player):
         self.player_ref = player
+    
+    def reset(self):
+        self.anim_index = 0
+        self.anim_counter = 0
+        self.awake = True
+        self.current_state = PICKUPSTATE.IDLE
+        self.pos_rect.x = 64
+        self.pos_rect.y = 56
