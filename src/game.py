@@ -168,6 +168,12 @@ class Game():
         
         pygame.display.flip()
     
+    def reset(self):
+        self.player.reset()
+        # TODO Have Enemy Manager and Coin Manager reset
+        self.enemy.reset()
+        self.pickup.reset()
+    
     def check_life_up(self):
         if self.score % LIFE_UP_COIN_AMT == 0:
             self.lives += 1
