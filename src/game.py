@@ -55,6 +55,8 @@ class Game():
 
         self.time = 999 # how much time per level to finish, just 999 for now
 
+        self.reset_timer = constants.TIMER_MANAGER.new_timer(2)
+
     def load(self) -> None:
         self.map.load()
         self.hud.set_font_ref(self.game_font) # Needs to come before load
@@ -131,13 +133,25 @@ class Game():
                         self.hud.update_health(self.player.health)
                     if event.type == constants.CUSTOMEVENTS.PLAYER_DIED:
                         self.lives -= 1
-                        self.hud.update_lives(self.lives)
+                        #self.hud.update_lives(self.lives)
+                        self.state = constants.GAMESTATE.RESET
             case constants.GAMESTATE.PAUSED:
                 if keys[pygame.K_ESCAPE]:
                     self.state = constants.GAMESTATE.GAMEPLAY
                 if keys[pygame.K_RETURN]:
                     pygame.event.post(pygame.Event(pygame.QUIT))
             # TODO GAMEOVER state shouldn't have any controls, just have a timer and then go back to TITLE state
+            case constants.GAMESTATE.GAMEOVER:
+                pass
+            case constants.GAMESTATE.RESET:
+                for event in pygame.event.get(constants.CUSTOMEVENTS.TIMER_ENDED):
+                    if event.type == constants.CUSTOMEVENTS.TIMER_ENDED:
+                        if event.dict["id"] == self.reset_timer:
+                            self.reset()
+                            self.hud.update_lives(self.lives)
+                            self.state = constants.GAMESTATE.GAMEPLAY
+                        else:
+                            pygame.event.post(pygame.Event(constants.CUSTOMEVENTS.TIMER_ENDED))
 
     def draw(self) -> None:
         match self.state:
@@ -162,6 +176,11 @@ class Game():
                 self.canvas.blit(self.pause_surf, (PAUSE_X, PAUSE_Y))
                 
             # TODO GAMEOVER state should draw Game Over screen stuff
+            case constants.GAMESTATE.GAMEOVER:
+                pass
+
+            case constants.GAMESTATE.RESET:
+                pass
 
         # draw canvas to the screen scaled to the same size as the screen(window)
         self.screen.blit(pygame.transform.scale(self.canvas, self.screen.get_rect().size))
