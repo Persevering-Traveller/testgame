@@ -1,16 +1,13 @@
 import pygame
-
-CANVAS_WIDTH = 160
-CANVAS_HEIGHT = 144
-TILE_SIZE = 16
+from tile import Tile
+import constants
 
 class Map():
     def __init__(self) -> None:
         self.tile_map = None # Will hold the tileset image
         self.level_bg = None # Will hold the background image
         self.level_bg_rect = None
-        self.tiles = {} # Holds the subdrawing area of the tilemap for each tile in the level
-        self.level = [] # Holds the actual level data
+        self.level = [] # Holds the tiles of a level
 
     def load(self) -> None:
         # Load the .csv file with open()
@@ -19,7 +16,7 @@ class Map():
         self.tile_map = pygame.image.load("../assets/sprites/tileset.png").convert_alpha() # convert_alpha() is needed or it will draw default black in the areas where there's no pixels in that square
         # Load the background image
         self.level_bg = pygame.image.load("../assets/sprites/background.png").convert()
-        self.level_bg_rect = pygame.Rect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
+        self.level_bg_rect = pygame.Rect(0, 0, constants.CANVAS_WIDTH, constants.CANVAS_HEIGHT)
         # Read the csv file line by line and split it by commas
         # and assign it to level list
         level_by_line = []
@@ -30,10 +27,19 @@ class Map():
         # into the dict by making the key the tileID, and the value is 
         # the section of the tileset for the tile using pygame.Rect
         for tile in level_by_line:
+            tileObj = Tile()
             tile_id = int(tile)
-            self.level.append(tile_id)
-            if tile_id == -1: continue
-            self.tiles[tile_id] = pygame.Rect((tile_id%13)*TILE_SIZE, (tile_id//13)*TILE_SIZE, TILE_SIZE, TILE_SIZE)
+            tileObj.set_tile_id(tile_id)
+            if tile_id == -1:
+                tileObj.set_draw_area(pygame.Rect(0, 0, 0, 0))
+            else:
+                tileObj.set_draw_area(((tile_id%13), (tile_id//13)))
+
+            self.level.append(tileObj)
+
+        # Set each loaded tile's position
+        for i in range(len(self.level)):
+            self.level[i].set_pos(((i%10), (i//10)))
 
         test_level.close()
 
@@ -43,16 +49,16 @@ class Map():
 
         # reads the level list and for every tile that isn't -1,
         # draws it to the canvas using the tiles dict
-        for i in range(len(self.level)):
-            if self.level[i] == -1: continue
-            canvas.blit(self.tile_map, ((i%10)*TILE_SIZE, (i//10)*TILE_SIZE), self.tiles[self.level[i]])
+        for tile in self.level:
+            if tile.get_tile_id() == -1: continue
+            canvas.blit(self.tile_map, tile.get_pos_rect(), tile.get_draw_area())
     
     def get_tile_at(self, x, y):
-        tile_x = x // TILE_SIZE
-        tile_y = y // TILE_SIZE
+        tile_x = x // constants.TILE_SIZE
+        tile_y = y // constants.TILE_SIZE
     
-        tile_index = (tile_y * CANVAS_WIDTH//TILE_SIZE) + tile_x
+        tile_index = (tile_y * constants.CANVAS_WIDTH//constants.TILE_SIZE) + tile_x
         #print(f"Tile Index is: {tile_index} -- tile_x: {tile_x}, tile_y: {tile_y}")
 
-        tile_id = self.level[tile_index]
+        tile_id = self.level[tile_index].get_tile_id()
         return tile_id
