@@ -1,5 +1,6 @@
 from enum import Enum
 import pygame
+from entity import Entity
 import constants
 
 SPRITE_SIZE = 16
@@ -10,18 +11,11 @@ class PICKUPSTATE(Enum):
     IDLE = 0
     COLLECTED = 1
 
-class Pickup():
+class Pickup(Entity):
     def __init__(self) -> None:
-        self.pos_rect = None # Rect -- It's collision shape and location
+        super().__init__()
         self.player_ref = None
 
-        self.sprite = None # Surface
-        self.anim_frames = []
-        self.anim_index = 0
-        self.anim_speed = 0.1 # Seconds or 1 Millisecond
-        self.anim_counter = 0 # Used to count frames
-
-        self.awake = True # Like actor's awake flag
         self.current_state = PICKUPSTATE.IDLE
         self.point_val = 100
 
@@ -66,9 +60,7 @@ class Pickup():
         self.player_ref = player
     
     def reset(self):
-        self.anim_index = 0
-        self.anim_counter = 0
-        self.awake = True
+        super().reset()
         self.current_state = PICKUPSTATE.IDLE
         self.pos_rect.x = 64
         self.pos_rect.y = 56
