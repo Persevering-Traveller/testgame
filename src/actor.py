@@ -1,16 +1,13 @@
 import pygame
+from entity import Entity
 import constants
 
-class Actor():
+class Actor(Entity):
     def __init__(self) -> None:
-        self.sprite = None # Main spritesheet surface
+        super().__init__()
         self.sprite_offset = (9, 9) # An x,y pair, by default it's the player's offset
         self.sprite_frame_size = 32 # The width and height of a frame, by default it's the player's
-        self.anim_frames = []
-        self.anim_index = 0
-        self.anim_speed = 0.1
-        self.anim_counter = 0.0
-        self.pos_rect = None # pygame.Rect; Position and Collision Rect
+
         self.collision_dimensions = (14, 16) # Width and Height of pos_rect, by default the player's w&h
         self.map_ref = None # A reference to the map (game level) for collision checking
 
@@ -25,8 +22,6 @@ class Actor():
         self.x_velocity = 0.0
         self.y_velocity = 0.0
 
-        self.awake = True # Used for when actor is not dead or off-screen
-        self.current_state = 0 # To be overwritten in inherited class
         self.is_grounded = True # Needed for collision checking
         self.facing = 1 # 1 for right, -1 for left
     
@@ -135,28 +130,16 @@ class Actor():
         #print(f"Side is: {side}")
         return side
 
-    def get_pos_rect(self):
-        return self.pos_rect
-
     def reset(self):
-        self.anim_index = 0
-        self.anim_counter = 0.0
+        super().reset()
         
         self.health = 1
         self.direction = 0
         self.x_velocity = 0.0
         self.y_velocity = 0.0
-        self.awake = True
         self.is_grounded = True
         self.facing = 1
     
-    # Three main functions to be overloaded
-    def load(self):
-        pass
-
-    def update(self, dt):
-        pass
-
     # The base sprite drawing and flipping, meant to be called by child's draw call
     def draw(self, canvas: pygame.Surface):
         # For facing left, we need to get the subsurface image, flip only that image, then blit that image to the canvas
