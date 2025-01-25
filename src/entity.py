@@ -1,0 +1,32 @@
+# Base class for all things existing in the game
+class Entity():
+    def __init__(self):
+        self.sprite = None # Main spritesheet surface
+        self.sprite_offset = () # An x,y pair for drawing
+        self.sprite_frame_size = 1 # The width and height of a frame
+        self.anim_frames = []
+        self.anim_index = 0
+        self.anim_speed = 0.1
+        self.anim_counter = 0.0
+        self.pos_rect = None # pygame.Rect; Position and Collision Rect
+
+        self.awake = True # Used for when entity is not dead or off-screen
+        self.current_state = 0 # To be overwritten in inherited class
+
+    def get_pos_rect(self):
+        return self.pos_rect
+    
+    def reset(self):
+        self.anim_index = 0
+        self.anim_counter = 0.0
+        self.awake = True
+
+    # Three main methods to be overwritten
+    def load(self):
+        pass
+
+    def update(self, dt):
+        pass
+
+    def draw(self, canvas):
+        pass
