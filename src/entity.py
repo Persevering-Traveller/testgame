@@ -16,6 +16,9 @@ class Entity():
     def get_pos_rect(self):
         return self.pos_rect
     
+    def shift(self, x, y):
+        self.pos_rect.move_ip(x, y)
+    
     def reset(self):
         self.anim_index = 0
         self.anim_counter = 0.0
