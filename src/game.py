@@ -4,6 +4,7 @@ from hud import HUD
 from pickups import Pickup
 from player import Player
 from squid import Squid
+from camera import Camera
 import constants
 
 LIFE_UP_COIN_AMT = 10000
@@ -41,6 +42,7 @@ class Game():
         self.pickup = Pickup()
         self.player = Player()
         self.enemy = Squid()
+        self.camera = Camera()
 
         self.title_logo_surf = None
         self.title_cursor_surf = None
@@ -78,6 +80,11 @@ class Game():
         self.pickup.set_player_ref(self.player)
         self.enemy.set_player_ref(self.player)
         self.player.enemy_ref = self.enemy # TODO delete this after setting up Enemy Manager
+
+        self.camera.set_level_tiles(self.map.get_level_data())
+        self.camera.add_level_entity(self.pickup)
+        self.camera.add_level_entity(self.player)
+        self.camera.add_level_entity(self.enemy)
 
         self.title_play_text_surf = self.game_font.render("Play", False, "white")
         self.title_quit_text_surf = self.game_font.render("Quit", False, "white")
@@ -123,6 +130,7 @@ class Game():
                 self.pickup.update(dt)
                 self.player.update(dt)
                 self.enemy.update(dt)
+                self.camera.update(dt)
                 self.time -= dt
                 #TODO if self.time <= 0: change state to GAMEOVER
 
