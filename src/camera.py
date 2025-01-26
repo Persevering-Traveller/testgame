@@ -9,6 +9,12 @@ class Camera():
     def set_focus(self, entity):
         self.focused_entity = entity
     
+    def add_level_entity(self, entity):
+        self.level_entities_references.append(entity)
+    
+    def set_level_tiles(self, tiles):
+        self.level_tiles_reference = tiles
+    
     def update(self, dt):
         # TODO this should shift entities relative to the focused entity's position
         for tile in self.level_tiles_reference:
