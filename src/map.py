@@ -71,3 +71,6 @@ class Map():
 
         tile_id = tile_at.get_tile_id()
         return tile_id
+    
+    def get_level_data(self):
+        return self.level
