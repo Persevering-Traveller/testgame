@@ -54,11 +54,20 @@ class Map():
             canvas.blit(self.tile_map, tile.get_pos_rect(), tile.get_draw_area())
     
     def get_tile_at(self, x, y):
-        tile_x = x // constants.TILE_SIZE
-        tile_y = y // constants.TILE_SIZE
-    
-        tile_index = (tile_y * constants.CANVAS_WIDTH//constants.TILE_SIZE) + tile_x
+        # Keeping just in case there's another way similar to my old way
+        #tile_x = x // constants.TILE_SIZE
+        #tile_y = y // constants.TILE_SIZE
+
+        #tile_index = (tile_y * constants.CANVAS_WIDTH//constants.TILE_SIZE) + tile_x
         #print(f"Tile Index is: {tile_index} -- tile_x: {tile_x}, tile_y: {tile_y}")
 
-        tile_id = self.level[tile_index].get_tile_id()
+        #tile_id = self.level[tile_index].get_tile_id()
+
+        # TODO only iterate over awake tiles (aka, on screen tiles)
+        tile_at = None
+        for tile in self.level:
+            if(tile.get_pos_rect().collidepoint(x, y)):
+                tile_at = tile
+
+        tile_id = tile_at.get_tile_id()
         return tile_id
