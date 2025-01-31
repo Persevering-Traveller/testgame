@@ -16,9 +16,12 @@ class Camera():
         self.level_tiles_reference = tiles
     
     def update(self, dt):
-        # TODO this should shift entities relative to the focused entity's position
+        # This perfectly follows the player
+        # TODO Consider making a sort of buffer zone that's slightly left and slightly right of center
+        shift_amt = -self.focused_entity.get_x_velocity()
+
         for tile in self.level_tiles_reference:
-            tile.shift(-1, 0)
+            tile.shift(shift_amt, 0)
 
         for entity in self.level_entities_references:
-            entity.shift(-1, 0)
+            entity.shift(shift_amt, 0)
