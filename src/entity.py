@@ -16,6 +16,10 @@ class Entity():
     def get_pos_rect(self):
         return self.pos_rect
     
+    # This is a method meant to be used by the Camera object in order to "move the camera"
+    # Though what's really happening is the world is shifting in the opposite direction of
+    # the camera's focused entity's movement direction (Player goes ->, Shift world <-, 
+    # and vice-versa)
     def shift(self, x, y):
         self.pos_rect.move_ip(x, y)
     
