@@ -69,7 +69,11 @@ class Map():
             if(tile.get_pos_rect().collidepoint(x, y)):
                 tile_at = tile
 
-        tile_id = tile_at.get_tile_id()
+        if tile_at == None:
+            tile_id = -1 # No tile found, so return the EMPTY tile value
+        else:
+            tile_id = tile_at.get_tile_id()
+        
         return tile_id
     
     def get_level_data(self):
