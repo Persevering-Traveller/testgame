@@ -65,6 +65,7 @@ class Actor(Entity):
                     self.pos_rect.move_ip(-1, 0) # If heading right, push back left
                 else:
                     self.pos_rect.move_ip(1, 0) # if heading left, push back right
+                self.x_velocity = 0
             
         return collision
 
