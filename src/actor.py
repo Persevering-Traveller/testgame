@@ -25,6 +25,12 @@ class Actor(Entity):
         self.is_grounded = True # Needed for collision checking
         self.facing = 1 # 1 for right, -1 for left
     
+    def get_x_velocity(self):
+        return self.x_velocity
+    
+    def get_y_velocity(self):
+        return self.y_velocity
+    
     def set_map_ref(self, map):
         if map != None:
             self.map_ref = map
