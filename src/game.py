@@ -85,6 +85,7 @@ class Game():
         self.camera.add_level_entity(self.pickup)
         self.camera.add_level_entity(self.player)
         self.camera.add_level_entity(self.enemy)
+        self.camera.set_camera_target(self.player)
 
         self.title_play_text_surf = self.game_font.render("Play", False, "white")
         self.title_quit_text_surf = self.game_font.render("Quit", False, "white")
