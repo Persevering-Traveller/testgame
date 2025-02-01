@@ -82,6 +82,7 @@ class Game():
         self.player.enemy_ref = self.enemy # TODO delete this after setting up Enemy Manager
 
         self.camera.set_level_tiles(self.map.get_level_data())
+        self.camera.set_background_ref(self.map.get_level_bg())
         self.camera.add_level_entity(self.pickup)
         self.camera.add_level_entity(self.player)
         self.camera.add_level_entity(self.enemy)
