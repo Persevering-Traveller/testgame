@@ -74,9 +74,10 @@ class Map():
 
         #tile_id = self.level[tile_index].get_tile_id()
 
-        # TODO only iterate over awake tiles (aka, on screen tiles)
         tile_at = None
         for tile in self.level:
+            if not tile.awake:
+                continue
             if(tile.get_pos_rect().collidepoint(x, y)):
                 tile_at = tile
 
