@@ -3,6 +3,8 @@ from tile import Tile
 from entity import Entity
 import constants
 
+LEVEL_TILE_WIDTH = 60
+
 class Map():
     def __init__(self) -> None:
         self.tile_map = None # Will hold the tileset image
@@ -11,7 +13,7 @@ class Map():
 
     def load(self) -> None:
         # Load the .csv file with open()
-        test_level = open("../assets/maps/test-level.csv", "r")
+        test_level = open("../assets/maps/test-level-v1.csv", "r")
         # Load the tileset image
         self.tile_map = pygame.image.load("../assets/sprites/tileset.png").convert_alpha() # convert_alpha() is needed or it will draw default black in the areas where there's no pixels in that square
         # Load the background image
@@ -41,7 +43,7 @@ class Map():
 
         # Set each loaded tile's position
         for i in range(len(self.level)):
-            self.level[i].set_pos(((i%10), (i//10)))
+            self.level[i].set_pos(((i%LEVEL_TILE_WIDTH), (i//LEVEL_TILE_WIDTH)))
 
         test_level.close()
 
