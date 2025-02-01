@@ -1,12 +1,12 @@
 import pygame
 from tile import Tile
+from entity import Entity
 import constants
 
 class Map():
     def __init__(self) -> None:
         self.tile_map = None # Will hold the tileset image
-        self.level_bg = None # Will hold the background image
-        self.level_bg_rect = None
+        self.level_bg = None # Entity that will hold the background image
         self.level = [] # Holds the tiles of a level
 
     def load(self) -> None:
@@ -15,8 +15,10 @@ class Map():
         # Load the tileset image
         self.tile_map = pygame.image.load("../assets/sprites/tileset.png").convert_alpha() # convert_alpha() is needed or it will draw default black in the areas where there's no pixels in that square
         # Load the background image
-        self.level_bg = pygame.image.load("../assets/sprites/background.png").convert()
-        self.level_bg_rect = pygame.Rect(0, 0, constants.CANVAS_WIDTH, constants.CANVAS_HEIGHT)
+        self.level_bg = Entity()
+        self.level_bg.sprite = pygame.image.load("../assets/sprites/background.png").convert()
+        self.level_bg.anim_frames.append(pygame.Rect(0, 0, constants.CANVAS_WIDTH, constants.CANVAS_HEIGHT))
+        self.level_bg.pos_rect = pygame.Rect(0, -32, 1, 1) # That -32 is just so you can see the hills with current level layout
         # Read the csv file line by line and split it by commas
         # and assign it to level list
         level_by_line = []
@@ -45,7 +47,7 @@ class Map():
 
     def draw(self, canvas) -> None:
         #Draw background first
-        canvas.blit(self.level_bg, (0, -32), self.level_bg_rect) # That -32 is just so you can see the hills with current level layout
+        canvas.blit(self.level_bg.sprite, self.level_bg.pos_rect, self.level_bg.anim_frames[0])
 
         # reads the level list and for every tile that isn't -1,
         # draws it to the canvas using the tiles dict
