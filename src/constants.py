@@ -6,7 +6,15 @@ CANVAS_WIDTH = 160
 CANVAS_HEIGHT = 144
 TILE_SIZE = 16
 
-COLLISION_TILES = [39, 40, 41, 50, 52, 53] # The tile ID of each collidable tile in Tiled
+ # The tile ID of each collidable tile in Tiled
+COLLISION_TILES = [39, 40, 41, # Single Row Grass tiles
+                   50, 51, # Brown Brick, Large and Small tiles
+                   52, 53, 54, 65, 67, 78, 79, 80, # 3x3 Grass tiles
+                   68, # Single Grass tile
+                   81, 94] # Single Column Grass tiles
+
+# TODO Setup the one-way collision tile
+#COLLISION_ONE_WAY_TILE = 42
 
 TIMER_MANAGER = TimerManager() # Only one timer manager and should be accessible to all enemies and player (or anything else)
 
