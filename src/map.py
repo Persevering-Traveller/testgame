@@ -66,25 +66,28 @@ class Map():
     
     def get_tile_at(self, x, y):
         # Keeping just in case there's another way similar to my old way
-        #tile_x = x // constants.TILE_SIZE
-        #tile_y = y // constants.TILE_SIZE
+        tile_x = x // constants.TILE_SIZE
+        tile_y = y // constants.TILE_SIZE
 
-        #tile_index = (tile_y * constants.CANVAS_WIDTH//constants.TILE_SIZE) + tile_x
-        #print(f"Tile Index is: {tile_index} -- tile_x: {tile_x}, tile_y: {tile_y}")
+        tile_index = (tile_y * LEVEL_TILE_WIDTH) + tile_x
 
-        #tile_id = self.level[tile_index].get_tile_id()
-
-        tile_at = None
-        for tile in self.level:
-            if not tile.awake:
-                continue
-            if(tile.get_pos_rect().collidepoint(x, y)):
-                tile_at = tile
-
-        if tile_at == None:
-            tile_id = -1 # No tile found, so return the EMPTY tile value
+        if abs(tile_index) > LEVEL_TILE_WIDTH * 9: # If where the entity is would be out of bounds
+            tile_id = -1
         else:
-            tile_id = tile_at.get_tile_id()
+            tile_id = self.level[tile_index].get_tile_id()
+
+        print(f"Tile ID is: {tile_id} -- Tile Index is: {tile_index} -- tile_x: {tile_x}, tile_y: {tile_y}")
+        # tile_at = None
+        # for tile in self.level:
+        #     if not tile.awake:
+        #         continue
+        #     if(tile.get_pos_rect().collidepoint(x, y)):
+        #         tile_at = tile
+
+        # if tile_at == None:
+        #     tile_id = -1 # No tile found, so return the EMPTY tile value
+        # else:
+        #     tile_id = tile_at.get_tile_id()
         
         return tile_id
     
