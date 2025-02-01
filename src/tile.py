@@ -6,6 +6,8 @@ class Tile(Entity):
     def __init__(self):
         super().__init__()
         self.tile_id = -1 # -1 means non-existant tile
+        # Though tile is an entity, there's no reason to update its world position, 
+        # because the tiles ARE the world
     
     def set_tile_id(self, id):
         self.tile_id = id

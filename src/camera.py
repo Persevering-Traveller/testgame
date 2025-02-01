@@ -12,6 +12,7 @@ class Camera():
         self.camera_target = target
     
     def add_level_entity(self, entity):
+        print(f"World Pos at initial add: {entity.world_pos}")
         self.level_entities_references.append(entity)
     
     def set_level_tiles(self, tiles):
@@ -27,11 +28,10 @@ class Camera():
 
         for tile in self.level_tiles_reference:
             tile.shift(self.shift_amount, 0)
-            entity.set_world_pos(-self.shift_amount, 0)
         
         # Shift background slightly slower than level for pretend depth
-        self.level_background_reference.shift(self.shift_amt/2, 0)
+        self.level_background_reference.shift(self.shift_amount/2, 0)
 
         for entity in self.level_entities_references:
-            entity.shift(self.shift_amt, 0)
+            entity.shift(self.shift_amount, 0)
             entity.set_world_pos(-self.shift_amount, 0)
