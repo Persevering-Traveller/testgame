@@ -51,15 +51,15 @@ class Player(Actor):
         last_dir = self.direction
         
         pressed_keys = pygame.key.get_pressed()
-        just_p_keys = pygame.key.get_just_pressed()
+        #just_p_keys = pygame.key.get_just_pressed()
 
         match self.current_state:
             case PLAYERSTATES.IDLE:
                 self.move_left_right(pressed_keys)
-                self.jump(just_p_keys)
+                self.jump(pressed_keys)
             case PLAYERSTATES.MOVING:
                 self.move_left_right(pressed_keys)
-                self.jump(just_p_keys)
+                self.jump(pressed_keys)
                 last_dir = self.deaccelerate_left_right(pressed_keys, dt)
             case PLAYERSTATES.JUMPING:
                 self.move_left_right(pressed_keys)
