@@ -80,3 +80,6 @@ class Map():
     
     def get_level_data(self):
         return self.level
+
+    def get_level_bg(self):
+        return self.level_bg
