@@ -18,7 +18,7 @@ class Map():
         self.level_bg = Entity()
         self.level_bg.sprite = pygame.image.load("../assets/sprites/background.png").convert()
         self.level_bg.anim_frames.append(pygame.Rect(0, 0, constants.CANVAS_WIDTH, constants.CANVAS_HEIGHT))
-        self.level_bg.pos_rect = pygame.Rect(0, -32, 1, 1) # That -32 is just so you can see the hills with current level layout
+        self.level_bg.pos_rect = pygame.Rect(0, -32, constants.CANVAS_WIDTH, constants.CANVAS_HEIGHT) # That -32 is just so you can see the hills with current level layout
         # Read the csv file line by line and split it by commas
         # and assign it to level list
         level_by_line = []
@@ -46,8 +46,15 @@ class Map():
         test_level.close()
 
     def draw(self, canvas) -> None:
-        #Draw background first
+        #Draw background first, and move background in order to be parallax
+        if self.level_bg.pos_rect.x > 0:
+            self.level_bg.pos_rect.x = -constants.CANVAS_WIDTH
+        elif self.level_bg.pos_rect.right < 0:
+            self.level_bg.pos_rect.x = 0
+
+        # Two blits of the background are needed to create a parallax background
         canvas.blit(self.level_bg.sprite, self.level_bg.pos_rect, self.level_bg.anim_frames[0])
+        canvas.blit(self.level_bg.sprite, (self.level_bg.pos_rect.x + constants.CANVAS_WIDTH, self.level_bg.pos_rect.y), self.level_bg.anim_frames[0])
 
         # reads the level list and for every tile that isn't -1,
         # draws it to the canvas using the tiles dict
