@@ -9,12 +9,20 @@ class Entity():
         self.anim_speed = 0.1
         self.anim_counter = 0.0
         self.pos_rect = None # pygame.Rect; Position and Collision Rect
+        self.world_pos = None # pygame.Rect; Position in the "world" relative to how the camera has shifted
 
         self.awake = True # Used for when entity is not dead or off-screen
         self.current_state = 0 # To be overwritten in inherited class
 
     def get_pos_rect(self):
         return self.pos_rect
+
+    def get_world_pos(self):
+        return self.world_pos
+    
+    def set_world_pos(self, x, y):
+        self.world_pos.x += x
+        self.world_pos.y += y
     
     # This is a method meant to be used by the Camera object in order to "move the camera"
     # Though what's really happening is the world is shifting in the opposite direction of
