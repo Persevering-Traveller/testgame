@@ -26,7 +26,8 @@ class Squid(Enemy):
 
     def load(self):
         self.sprite = pygame.image.load("../assets/sprites/enemy-squid-sheet.png")
-        self.pos_rect = pygame.Rect(112, 80, self.collision_dimensions[0], self.collision_dimensions[1])        
+        self.pos_rect = pygame.Rect(112, 80, self.collision_dimensions[0], self.collision_dimensions[1])
+        self.world_pos = pygame.Rect(self.pos_rect) # Initially, pos_rect of screen space is the same as world pos
         for i in range(2):
             self.anim_frames.append(pygame.Rect(self.sprite_frame_size * i, 0, self.sprite_frame_size, self.sprite_frame_size)) # Walking
         

@@ -35,13 +35,14 @@ class Player(Actor):
     def load(self):
         self.sprite = pygame.image.load("../assets/sprites/player-sheet.png").convert_alpha()
         self.pos_rect = pygame.Rect(80, 80, self.collision_dimensions[0], self.collision_dimensions[1])
+        self.world_pos = pygame.Rect(self.pos_rect) # Initially, pos_rect of screen space is the same as world pos
 
         self.anim_frames.append(pygame.Rect(0, 0, self.sprite_frame_size, self.sprite_frame_size)) # Idle
         for i in range(3):
             self.anim_frames.append(pygame.Rect(self.sprite_frame_size * i, self.sprite_frame_size, self.sprite_frame_size, self.sprite_frame_size)) # Moving
         self.anim_frames.append(pygame.Rect(0, self.sprite_frame_size * 2, self.sprite_frame_size, self.sprite_frame_size)) # Jumping
         self.anim_frames.append(pygame.Rect(0, self.sprite_frame_size * 3, self.sprite_frame_size, self.sprite_frame_size)) # Hurt and Dying
-        print(self.anim_frames)
+        
         self.hurt_timer = constants.TIMER_MANAGER.new_timer(1)
         self.start_over_timer = constants.TIMER_MANAGER.new_timer(2)
 
