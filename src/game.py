@@ -129,14 +129,6 @@ class Game():
                 if keys[pygame.K_ESCAPE]:
                     self.state = constants.GAMESTATE.PAUSED
                 
-                # Without turning off outside of screen tiles, the game slows to a crawl...
-                for tile in self.map.get_level_data():
-                    if tile.get_pos_rect().x < 0 or tile.get_pos_rect().x > constants.CANVAS_WIDTH:
-                        tile.awake = False
-                    elif tile.get_pos_rect().x >= 0 and tile.get_pos_rect().x <= constants.CANVAS_WIDTH:
-                        tile.awake = True
-                    
-
                 self.hud.update_time(self.time)
                 self.pickup.update(dt)
                 self.player.update(dt)
