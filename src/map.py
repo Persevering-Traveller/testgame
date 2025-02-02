@@ -71,7 +71,7 @@ class Map():
 
         tile_index = (tile_y * LEVEL_TILE_WIDTH) + tile_x
 
-        if abs(tile_index) > LEVEL_TILE_WIDTH * 9: # If where the entity is would be out of bounds
+        if tile_index > LEVEL_TILE_WIDTH * 9 or tile_index < 0: # If where the entity is would be out of bounds
             tile_id = -1
         else:
             tile_id = self.level[tile_index].get_tile_id()
