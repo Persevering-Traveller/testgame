@@ -7,12 +7,14 @@ class Camera():
         self.level_tiles_reference = None
         self.level_background_reference = None
         self.shift_amount = 0.0
+        self.prev_target_pos_x = 0
     
     def set_camera_target(self, target):
         self.camera_target = target
+        self.prev_target_pos_x = target.pos_rect.x
     
     def add_level_entity(self, entity):
-        print(f"World Pos at initial add: {entity.world_pos}")
+        #print(f"World Pos at initial add: {entity.world_pos}")
         self.level_entities_references.append(entity)
     
     def set_level_tiles(self, tiles):
@@ -24,7 +26,8 @@ class Camera():
     def update(self, dt):
         # This perfectly follows the player
         # TODO Consider making a sort of buffer zone that's slightly left and slightly right of center
-        self.shift_amount = -self.camera_target.get_x_velocity()
+        self.shift_amount = -(self.camera_target.pos_rect.x - self.prev_target_pos_x)
+        #print(f"Shift Amt: {self.shift_amount}")
 
         for tile in self.level_tiles_reference:
             tile.shift(self.shift_amount, 0)
@@ -35,3 +38,5 @@ class Camera():
         for entity in self.level_entities_references:
             entity.shift(self.shift_amount, 0)
             entity.set_world_pos(-self.shift_amount, 0)
+        
+        self.prev_target_pos_x = self.camera_target.pos_rect.x
