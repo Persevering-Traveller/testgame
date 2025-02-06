@@ -26,7 +26,7 @@ class Camera():
     def update(self, dt):
         # This perfectly follows the player
         # TODO Consider making a sort of buffer zone that's slightly left and slightly right of center
-        self.shift_amount = -(self.camera_target.pos_rect.x - self.prev_target_pos_x)
+        self.shift_amount = -(self.camera_target.world_pos.x - self.prev_target_pos_x)
         #print(f"Shift Amt: {self.shift_amount}")
 
         for tile in self.level_tiles_reference:
@@ -37,6 +37,5 @@ class Camera():
 
         for entity in self.level_entities_references:
             entity.shift(self.shift_amount, 0)
-            entity.set_world_pos(-self.shift_amount, 0)
         
-        self.prev_target_pos_x = self.camera_target.pos_rect.x
+        self.prev_target_pos_x = self.camera_target.world_pos.x
