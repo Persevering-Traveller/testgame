@@ -76,18 +76,7 @@ class Map():
         else:
             tile_id = self.level[tile_index].get_tile_id()
 
-        print(f"Tile ID is: {tile_id} -- Tile Index is: {tile_index} -- tile_x: {tile_x}, tile_y: {tile_y}")
-        # tile_at = None
-        # for tile in self.level:
-        #     if not tile.awake:
-        #         continue
-        #     if(tile.get_pos_rect().collidepoint(x, y)):
-        #         tile_at = tile
-
-        # if tile_at == None:
-        #     tile_id = -1 # No tile found, so return the EMPTY tile value
-        # else:
-        #     tile_id = tile_at.get_tile_id()
+        #print(f"Tile ID is: {tile_id} -- Tile Index is: {tile_index} -- tile_x: {tile_x}, tile_y: {tile_y}")
         
         return tile_id
     
@@ -96,3 +85,5 @@ class Map():
 
     def get_level_bg(self):
         return self.level_bg
+
+    # TODO Add a reset for tiles to go back to initial positions on a game reset
