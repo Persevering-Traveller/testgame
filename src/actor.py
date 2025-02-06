@@ -45,20 +45,32 @@ class Actor(Entity):
         collision = False
         
         for i in range(abs(sub_x_vel_acc)): # NOTE Fun thing about python, you can give this for a negative number and uh....WATCH OUT
+            # Have to move pos_rect so the camera doesn't leave the player behind
+            # Have to update world_pos so collision works based on World position
             if sub_x_vel_acc > 0: # Move them in the direction they were heading, right or left
                 self.pos_rect.move_ip(1, 0)
+                self.world_pos.move_ip(1, 0)
             else:
                 self.pos_rect.move_ip(-1, 0)
+                self.world_pos.move_ip(-1, 0)
 
             # Checks the tiles left and right of collision rect at 3 points(Top, Center, and Bottom) for collidable tiles
             # If one is found, collision flag will be true and used for collision reaction
+            # surrounding_tiles = [
+            #     self.map_ref.get_tile_at(self.pos_rect.left, self.pos_rect.top), # Check Top-Left Tile
+            #     self.map_ref.get_tile_at(self.pos_rect.left, self.pos_rect.centery), # Check Center-Left Tile
+            #     self.map_ref.get_tile_at(self.pos_rect.left, self.pos_rect.bottom - 1), # Check Bottom-Left Tile 1 additional pixel above self
+            #     self.map_ref.get_tile_at(self.pos_rect.right, self.pos_rect.top), # Check Top-Right Tile
+            #     self.map_ref.get_tile_at(self.pos_rect.right, self.pos_rect.centery), # Check Center-Right Tile
+            #     self.map_ref.get_tile_at(self.pos_rect.right, self.pos_rect.bottom - 1), # Check Bottom-Right Tile 1 additional pixel above self
+            # ]
             surrounding_tiles = [
-                self.map_ref.get_tile_at(self.pos_rect.left, self.pos_rect.top), # Check Top-Left Tile
-                self.map_ref.get_tile_at(self.pos_rect.left, self.pos_rect.centery), # Check Center-Left Tile
-                self.map_ref.get_tile_at(self.pos_rect.left, self.pos_rect.bottom - 1), # Check Bottom-Left Tile 1 additional pixel above self
-                self.map_ref.get_tile_at(self.pos_rect.right, self.pos_rect.top), # Check Top-Right Tile
-                self.map_ref.get_tile_at(self.pos_rect.right, self.pos_rect.centery), # Check Center-Right Tile
-                self.map_ref.get_tile_at(self.pos_rect.right, self.pos_rect.bottom - 1), # Check Bottom-Right Tile 1 additional pixel above self
+                self.map_ref.get_tile_at(self.world_pos.left, self.world_pos.top), # Check Top-Left Tile
+                self.map_ref.get_tile_at(self.world_pos.left, self.world_pos.centery), # Check Center-Left Tile
+                self.map_ref.get_tile_at(self.world_pos.left, self.world_pos.bottom - 1), # Check Bottom-Left Tile 1 additional pixel above self
+                self.map_ref.get_tile_at(self.world_pos.right, self.world_pos.top), # Check Top-Right Tile
+                self.map_ref.get_tile_at(self.world_pos.right, self.world_pos.centery), # Check Center-Right Tile
+                self.map_ref.get_tile_at(self.world_pos.right, self.world_pos.bottom - 1), # Check Bottom-Right Tile 1 additional pixel above self
             ]
             
             for tile_id in surrounding_tiles:
@@ -69,8 +81,10 @@ class Actor(Entity):
             if collision:
                 if sub_x_vel_acc > 0:
                     self.pos_rect.move_ip(-1, 0) # If heading right, push back left
+                    self.world_pos.move_ip(-1, 0)
                 else:
                     self.pos_rect.move_ip(1, 0) # if heading left, push back right
+                    self.world_pos.move_ip(1, 0)
                 self.x_velocity = 0
             
         return collision
@@ -80,20 +94,32 @@ class Actor(Entity):
         collision = False
         
         for i in range(abs(sub_y_vel_acc)):
+            # Have to move pos_rect so it shows the player jumping up and falling down
+            # Have to update world_pos so collision works based on World position
             if sub_y_vel_acc > 0: # Move one pixel in the direction they were heading: down or up
                 self.pos_rect.move_ip(0, 1)
+                self.world_pos.move_ip(0, 1)
             else:
                 self.pos_rect.move_ip(0, -1)
+                self.world_pos.move_ip(0, -1)
 
             # Checks the tiles above and below the collision rect at 3 points(Left, Center, and Right) for collidable tiles.
             # If one is found, collision flag will become true and used for collision reaction 
+            # surrounding_tiles = [
+            #     self.map_ref.get_tile_at(self.pos_rect.left, self.pos_rect.top), # Check Top-Left Tile
+            #     self.map_ref.get_tile_at(self.pos_rect.centerx, self.pos_rect.top), # Check Top-Center Tile
+            #     self.map_ref.get_tile_at(self.pos_rect.right, self.pos_rect.top), # Check Top-Right Tile
+            #     self.map_ref.get_tile_at(self.pos_rect.left, self.pos_rect.bottom - 1), # Check Bottom-Left Tile 1 additional pixel above self
+            #     self.map_ref.get_tile_at(self.pos_rect.centerx, self.pos_rect.bottom - 1), # Check Bottom-Center Tile 1 additional pixel above self
+            #     self.map_ref.get_tile_at(self.pos_rect.right, self.pos_rect.bottom - 1) # Check Bottom-Right Tile 1 additional pixel above self
+            # ]
             surrounding_tiles = [
-                self.map_ref.get_tile_at(self.pos_rect.left, self.pos_rect.top), # Check Top-Left Tile
-                self.map_ref.get_tile_at(self.pos_rect.centerx, self.pos_rect.top), # Check Top-Center Tile
-                self.map_ref.get_tile_at(self.pos_rect.right, self.pos_rect.top), # Check Top-Right Tile
-                self.map_ref.get_tile_at(self.pos_rect.left, self.pos_rect.bottom - 1), # Check Bottom-Left Tile 1 additional pixel above self
-                self.map_ref.get_tile_at(self.pos_rect.centerx, self.pos_rect.bottom - 1), # Check Bottom-Center Tile 1 additional pixel above self
-                self.map_ref.get_tile_at(self.pos_rect.right, self.pos_rect.bottom - 1) # Check Bottom-Right Tile 1 additional pixel above self
+                self.map_ref.get_tile_at(self.world_pos.left, self.world_pos.top), # Check Top-Left Tile
+                self.map_ref.get_tile_at(self.world_pos.centerx, self.world_pos.top), # Check Top-Center Tile
+                self.map_ref.get_tile_at(self.world_pos.right, self.world_pos.top), # Check Top-Right Tile
+                self.map_ref.get_tile_at(self.world_pos.left, self.world_pos.bottom - 1), # Check Bottom-Left Tile 1 additional pixel above self
+                self.map_ref.get_tile_at(self.world_pos.centerx, self.world_pos.bottom - 1), # Check Bottom-Center Tile 1 additional pixel above self
+                self.map_ref.get_tile_at(self.world_pos.right, self.world_pos.bottom - 1) # Check Bottom-Right Tile 1 additional pixel above self
             ]
 
             for tile_id in surrounding_tiles:
@@ -103,10 +129,12 @@ class Actor(Entity):
             if collision:
                 if sub_y_vel_acc > 0:
                     self.pos_rect.move_ip(0, -1) # If moving down, and collision, push back up
+                    self.world_pos.move_ip(0, -1)
                     self.is_grounded = True
                     self.y_velocity = 0
                 else:
                     self.pos_rect.move_ip(0, 1) # if moving up, and collision, push back down
+                    self.world_pos.move_ip(0, 1)
                     self.y_velocity = 0
 
         return collision   
