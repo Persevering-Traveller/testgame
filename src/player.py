@@ -152,6 +152,8 @@ class Player(Actor):
         if self.pos_rect.y < -32: self.pos_rect.y = -32
         elif self.pos_rect.y + self.pos_rect.height > 144: # if player falls in a pit
             self.health = 0
+            pygame.event.post(pygame.Event(constants.CUSTOMEVENTS.PLAYER_HURT))
+            constants.TIMER_MANAGER.start_timer(self.start_over_timer)
             self.current_state = PLAYERSTATES.DIED
 
 
