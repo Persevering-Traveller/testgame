@@ -138,9 +138,16 @@ class Player(Actor):
                     pygame.event.post(pygame.Event(constants.CUSTOMEVENTS.PLAYER_DIED))
 
 
-        # Screen Boundaries ; Temporary
-        if self.pos_rect.x < 0: self.pos_rect.x = 0
-        elif self.pos_rect.x + self.pos_rect.width > 160: self.pos_rect.x = 160 - self.pos_rect.width
+        # Screen Boundaries
+        if self.pos_rect.x < 0:
+            self.pos_rect.x = 0
+        elif self.pos_rect.x + self.pos_rect.width > constants.CANVAS_WIDTH: 
+            self.pos_rect.x = constants.CANVAS_WIDTH - self.pos_rect.width
+        # World Boundaries
+        if self.world_pos.x < 0: 
+            self.world_pos.x = 0
+        elif self.world_pos.x + self.world_pos.width > constants.TILE_SIZE * constants.LEVEL_TILE_WIDTH: 
+            self.world_pos.x = constants.TILE_SIZE * constants.LEVEL_TILE_WIDTH - self.world_pos.width
 
         if self.pos_rect.y < -32: self.pos_rect.y = -32
         elif self.pos_rect.y + self.pos_rect.height > 144: # if player falls in a pit
