@@ -136,9 +136,6 @@ class Player(Actor):
                    self.current_state = PLAYERSTATES.IDLE
                 elif event.dict["id"] == self.start_over_timer:
                     pygame.event.post(pygame.Event(constants.CUSTOMEVENTS.PLAYER_DIED))
-                else:
-                    # If its not the hurt timer or start over timer, put it back in the event queue
-                    pygame.event.post(pygame.Event(constants.CUSTOMEVENTS.TIMER_ENDED))
 
 
         # Screen Boundaries ; Temporary

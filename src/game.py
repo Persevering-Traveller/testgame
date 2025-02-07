@@ -178,8 +178,6 @@ class Game():
                             self.reset()
                             self.hud.update_health(self.player.health)
                             self.state = constants.GAMESTATE.GAMEPLAY
-                        else:
-                            pygame.event.post(pygame.Event(constants.CUSTOMEVENTS.TIMER_ENDED))
 
     def draw(self) -> None:
         match self.state:
