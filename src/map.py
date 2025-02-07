@@ -3,8 +3,6 @@ from tile import Tile
 from entity import Entity
 import constants
 
-LEVEL_TILE_WIDTH = 60
-
 class Map():
     def __init__(self) -> None:
         self.tile_map = None # Will hold the tileset image
@@ -43,7 +41,7 @@ class Map():
 
         # Set each loaded tile's position
         for i in range(len(self.level)):
-            self.level[i].set_pos(((i%LEVEL_TILE_WIDTH), (i//LEVEL_TILE_WIDTH)))
+            self.level[i].set_pos(((i%constants.LEVEL_TILE_WIDTH), (i//constants.LEVEL_TILE_WIDTH)))
 
         test_level.close()
 
@@ -69,9 +67,9 @@ class Map():
         tile_x = x // constants.TILE_SIZE
         tile_y = y // constants.TILE_SIZE
 
-        tile_index = (tile_y * LEVEL_TILE_WIDTH) + tile_x
+        tile_index = (tile_y * constants.LEVEL_TILE_WIDTH) + tile_x
 
-        if tile_index > LEVEL_TILE_WIDTH * 9 or tile_index < 0: # If where the entity is would be out of bounds
+        if tile_index > constants.LEVEL_TILE_WIDTH * 9 or tile_index < 0: # If where the entity is would be out of bounds
             tile_id = -1
         else:
             tile_id = self.level[tile_index].get_tile_id()

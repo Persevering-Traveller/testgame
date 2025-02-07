@@ -5,6 +5,7 @@ from manager_timer import TimerManager
 CANVAS_WIDTH = 160
 CANVAS_HEIGHT = 144
 TILE_SIZE = 16
+LEVEL_TILE_WIDTH = 60
 
  # The tile ID of each collidable tile in Tiled
 COLLISION_TILES = [39, 40, 41, # Single Row Grass tiles
