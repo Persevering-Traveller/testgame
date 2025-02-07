@@ -1,4 +1,4 @@
-import pygame
+import constants
 
 class Camera():
     def __init__(self):
@@ -24,6 +24,11 @@ class Camera():
         self.level_background_reference = bg
     
     def update(self, dt):
+        # Don't shift the camera if the player is at the edges of the level
+        if (self.camera_target.world_pos.x - (constants.CANVAS_WIDTH//2) <= 0 or 
+            self.camera_target.world_pos.x + (constants.CANVAS_WIDTH//2) >= 16 * constants.LEVEL_TILE_WIDTH): 
+            return
+        
         # This perfectly follows the player
         # TODO Consider making a sort of buffer zone that's slightly left and slightly right of center
         self.shift_amount = -(self.camera_target.world_pos.x - self.prev_target_pos_x)
