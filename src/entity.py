@@ -10,6 +10,7 @@ class Entity():
         self.anim_counter = 0.0
         self.pos_rect = None # pygame.Rect; Position and Collision Rect
         self.world_pos = None # pygame.Rect; Position in the "world" relative to how the camera has shifted
+        self.initial_world_pos = None # For resetting
 
         self.awake = True # Used for when entity is not dead or off-screen
         self.current_state = 0 # To be overwritten in inherited class
@@ -34,6 +35,7 @@ class Entity():
     def reset(self):
         self.anim_index = 0
         self.anim_counter = 0.0
+        self.world_pos = self.initial_world_pos.copy()
         self.awake = True
 
     # Three main methods to be overwritten
