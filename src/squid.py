@@ -81,7 +81,7 @@ class Squid(Enemy):
         # Actual blitting happens with the Actor's draw
         super().draw(canvas)
         # DEBUG
-        pygame.draw.rect(canvas, "red", self.pos_rect, 1)
+        #pygame.draw.rect(canvas, "red", self.pos_rect, 1)
     
     def reset(self):
         super().reset()
