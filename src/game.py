@@ -225,6 +225,8 @@ class Game():
         # TODO Have Enemy Manager and Coin Manager reset
         self.enemy.reset()
         self.pickup.reset()
+        self.map.reset()
+        self.camera.reset()
     
     def check_life_up(self):
         if self.score % LIFE_UP_COIN_AMT == 0:
