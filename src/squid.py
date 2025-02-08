@@ -48,15 +48,18 @@ class Squid(Enemy):
                     # TODO play death sound effect
                     return # Early return so x and y velocity aren't overwritten
 
-                # Checks to see if they touch a wall...
+                # Checks to see if they touch a wall or if there's a cliff...
                 bump_into_wall = self.x_collision_check(self.x_velocity)
                 self.y_collision_check(self.y_velocity)
+                cliff_side = self.cliff_side_check()
 
                 # ...And turns around if so
-                # Undecided on whether they should turn back at a pitfall...
-                if bump_into_wall:
+                if bump_into_wall or cliff_side:
                     self.direction *= -1
                     self.x_velocity = 0
+                    # Need to push them one pixel or else they'll turn around but still
+                    # see they're near a cliff side, making them freak out
+                    self.world_pos.x += 1 * self.direction
                 
                 # Cap movement speed
                 if abs(self.x_velocity) >= MAX_X_VELOCITY:
