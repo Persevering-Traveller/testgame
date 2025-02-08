@@ -155,7 +155,8 @@ class Player(Actor):
             pygame.event.post(pygame.Event(constants.CUSTOMEVENTS.PLAYER_HURT))
             constants.TIMER_MANAGER.start_timer(self.start_over_timer)
             self.current_state = PLAYERSTATES.DIED
-
+        
+        #print(f"Player ScreenPos: ({self.pos_rect.x},{self.pos_rect.y}) | WorldPos: ({self.world_pos.x},{self.world_pos.y})")
 
     def draw(self, canvas: pygame.Surface):
         match self.current_state:
