@@ -28,3 +28,13 @@ class Enemy(Actor):
             return True
         else:
             return False
+    
+    def cliff_side_check(self):
+        #print(self.world_pos.center)
+        left_groundpoint = self.map_ref.get_tile_at(self.world_pos.left, self.world_pos.bottom)
+        center_groundpoint = self.map_ref.get_tile_at(self.world_pos.centerx, self.world_pos.bottom)
+        right_groundpoint = self.map_ref.get_tile_at(self.world_pos.right, self.world_pos.bottom)
+        
+        # Is there no collision tile on the left or right side of their feet
+        return ((left_groundpoint == -1 and center_groundpoint != -1 and right_groundpoint != -1) or
+                (right_groundpoint == -1 and left_groundpoint != -1 and center_groundpoint != -1))
