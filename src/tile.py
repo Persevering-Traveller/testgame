@@ -25,4 +25,8 @@ class Tile(Entity):
     
     def set_pos(self, pos):
         position = pygame.Rect(pos[0] * constants.TILE_SIZE, pos[1] * constants.TILE_SIZE, constants.TILE_SIZE, constants.TILE_SIZE)
-        self.pos_rect = position
+        self.pos_rect = position.copy()
+        self.initial_world_pos = position.copy()
+    
+    def reset(self):
+        self.pos_rect = self.initial_world_pos.copy()

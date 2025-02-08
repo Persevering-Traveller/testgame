@@ -84,4 +84,6 @@ class Map():
     def get_level_bg(self):
         return self.level_bg
 
-    # TODO Add a reset for tiles to go back to initial positions on a game reset
+    def reset(self):
+        for tile in self.level:
+            tile.reset()
