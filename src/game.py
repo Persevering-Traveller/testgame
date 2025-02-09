@@ -80,6 +80,7 @@ class Game():
         self.pickup.set_player_ref(self.player)
         self.enemy.set_player_ref(self.player)
         self.player.enemy_ref = self.enemy # TODO delete this after setting up Enemy Manager
+        constants.SOUND_MANAGER.load()
 
         self.camera.set_level_tiles(self.map.get_level_data())
         self.camera.set_background_ref(self.map.get_level_bg())
@@ -112,6 +113,8 @@ class Game():
         keys = pygame.key.get_just_pressed()
         match self.state:
             case constants.GAMESTATE.TITLE:
+                constants.SOUND_MANAGER.play_music(constants.MUSIC.MAIN_MENU)
+
                 if keys[pygame.K_w]:
                     # Move selection cursor up
                     self.title_cursor_selection = abs((self.title_cursor_selection - 1) % len(self.title_cursor_locations))
@@ -121,11 +124,14 @@ class Game():
                 if keys[pygame.K_RETURN] or keys[pygame.K_j]:
                     # Read selection and change state/quit accordingly
                     if self.title_cursor_selection == 0:
+                        constants.SOUND_MANAGER.stop_music()
                         self.state = constants.GAMESTATE.GAMEPLAY
                     else:
                         # Will be captured by main's checking for QUIT
                         pygame.event.post(pygame.Event(pygame.QUIT)) # I find it a little silly that I have to turn this known constant into a proper pygame Event
             case constants.GAMESTATE.GAMEPLAY:
+                constants.SOUND_MANAGER.play_music(constants.MUSIC.LEVEL)
+
                 if keys[pygame.K_ESCAPE]:
                     self.state = constants.GAMESTATE.PAUSED
                 
@@ -162,6 +168,7 @@ class Game():
                         self.lives -= 1
                         self.hud.update_lives(self.lives)
                         constants.TIMER_MANAGER.start_timer(self.reset_timer)
+                        constants.SOUND_MANAGER.stop_music()
                         self.state = constants.GAMESTATE.RESET
             case constants.GAMESTATE.PAUSED:
                 if keys[pygame.K_ESCAPE]:
