@@ -193,6 +193,8 @@ class Player(Actor):
                 self.current_state = PLAYERSTATES.JUMPING
                 self.is_grounded = False
                 self.y_velocity = self.jump_force
+
+                constants.SOUND_MANAGER.play_sfx(constants.SOUNDFX.JUMP)
     
     def deaccelerate_left_right(self, pressed_keys, dt):
         if not pressed_keys[pygame.K_a] and not pressed_keys[pygame.K_d]:
