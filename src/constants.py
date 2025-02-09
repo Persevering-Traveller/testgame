@@ -1,6 +1,7 @@
 from enum import Enum
 import pygame
 from manager_timer import TimerManager
+from manager_sound import SoundManager
 
 CANVAS_WIDTH = 160
 CANVAS_HEIGHT = 144
@@ -18,6 +19,7 @@ COLLISION_TILES = [39, 40, 41, # Single Row Grass tiles
 #COLLISION_ONE_WAY_TILE = 42
 
 TIMER_MANAGER = TimerManager() # Only one timer manager and should be accessible to all enemies and player (or anything else)
+SOUND_MANAGER = SoundManager() # Only one sound manager
 
 class GAMESTATE(Enum):
     TITLE = 0
@@ -46,3 +48,15 @@ class COLLISIONSIDE(Enum):
     TOP = 1
     RIGHT = 2
     BOTTOM = 3
+
+class SOUNDFX(Enum):
+    CONFIRM = 0
+    DEATH = 1
+    END = 2
+    HIT = 3
+    JUMP = 4
+    HURT = 5
+
+class MUSIC(Enum):
+    MAIN_MENU = 0
+    LEVEL = 1
