@@ -1,6 +1,8 @@
 assets/fonts
 assets/maps
 assets/sprites
+assets/music
+assets/sfx
 bin/
 include
 lib/
