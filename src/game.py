@@ -7,6 +7,7 @@ from squid import Squid
 from camera import Camera
 import constants
 
+LEVEL_TIME = 999
 LIFE_UP_COIN_AMT = 10000
 FONT_SIZE = 10
 TEXT_X = 70
@@ -64,7 +65,7 @@ class Game():
         self.lives = 3 # player lives
         self.coins = 0
 
-        self.time = 999 # how much time per level to finish, just 999 for now
+        self.time = LEVEL_TIME # how much time per level to finish, just 999 for now
 
         self.reset_timer = constants.TIMER_MANAGER.new_timer(2)
 
@@ -228,6 +229,7 @@ class Game():
         pygame.display.flip()
     
     def reset(self):
+        self.time = LEVEL_TIME
         self.player.reset()
         # TODO Have Enemy Manager and Coin Manager reset
         self.enemy.reset()
