@@ -137,6 +137,7 @@ class Game():
                 constants.SOUND_MANAGER.play_music(constants.MUSIC.LEVEL)
 
                 if keys[pygame.K_ESCAPE]:
+                    constants.SOUND_MANAGER.pause_music()
                     self.state = constants.GAMESTATE.PAUSED
                 
                 self.hud.update_time(self.time)
@@ -176,6 +177,7 @@ class Game():
                         self.state = constants.GAMESTATE.RESET
             case constants.GAMESTATE.PAUSED:
                 if keys[pygame.K_ESCAPE]:
+                    constants.SOUND_MANAGER.play_music(constants.MUSIC.LEVEL)
                     self.state = constants.GAMESTATE.GAMEPLAY
                 if keys[pygame.K_RETURN]:
                     pygame.event.post(pygame.Event(pygame.QUIT))
