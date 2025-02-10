@@ -117,9 +117,11 @@ class Player(Actor):
                 self.awake = False
                 pygame.event.post(pygame.Event(constants.CUSTOMEVENTS.PLAYER_HURT))
                 if self.health > 0:
+                    constants.SOUND_MANAGER.play_sfx(constants.SOUNDFX.HIT)
                     constants.TIMER_MANAGER.start_timer(self.hurt_timer)
                     self.current_state = PLAYERSTATES.HURT
                 elif self.health <= 0:
+                    constants.SOUND_MANAGER.play_sfx(constants.SOUNDFX.DIED)
                     constants.TIMER_MANAGER.start_timer(self.start_over_timer)
                     self.current_state = PLAYERSTATES.DIED
             else: # Bounce off enemies like jumping
