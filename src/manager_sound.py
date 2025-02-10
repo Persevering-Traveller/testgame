@@ -16,21 +16,22 @@ class SoundManager():
         self.sfx_hurt = None
     
     def load(self):
+        # TODO Convert all .wav into .ogg
         self.mus_menu = "../assets/music/menu-theme.wav"
         self.mus_level = "../assets/music/level.wav"
 
         self.sfx_confirm = pygame.Sound("../assets/sfx/confirm-beep.wav")
-        self.sfx_gameover = pygame.Sound("../assets/sfx/death-jingle.wav")
+        self.sfx_gameover = pygame.Sound("../assets/sfx/game-over.wav")
         self.sfx_end = pygame.Sound("../assets/sfx/end-of-level.wav")
         self.sfx_hit = pygame.Sound("../assets/sfx/hit.ogg")
         self.sfx_jump = pygame.Sound("../assets/sfx/jump.wav")
-        self.sfx_hurt = pygame.Sound("../assets/sfx/player-hurt.wav")
+        self.sfx_hurt = pygame.Sound("../assets/sfx/player-died.wav")
     
     def play_sfx(self, sfx):
         match sfx:
             case constants.SOUNDFX.CONFIRM:
                 self.sfx_confirm.play()
-            case constants.SOUNDFX.DEATH:
+            case constants.SOUNDFX.GAMEOVER:
                 self.sfx_gameover.play()
             case constants.SOUNDFX.END:
                 self.sfx_end.play()
@@ -38,7 +39,7 @@ class SoundManager():
                 self.sfx_hit.play()
             case constants.SOUNDFX.JUMP:
                 self.sfx_jump.play()
-            case constants.SOUNDFX.HURT:
+            case constants.SOUNDFX.DIED:
                 self.sfx_hurt.play()
     
     def play_music(self, music):
