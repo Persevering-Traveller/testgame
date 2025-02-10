@@ -51,11 +51,11 @@ class COLLISIONSIDE(Enum):
 
 class SOUNDFX(Enum):
     CONFIRM = 0
-    DEATH = 1
+    GAMEOVER = 1
     END = 2
     HIT = 3
     JUMP = 4
-    HURT = 5
+    DIED = 5
 
 class MUSIC(Enum):
     MAIN_MENU = 0
