@@ -59,9 +59,16 @@ class SoundManager():
                     pygame.mixer.music.play(-1)
                     self.current_music = self.mus_level
                     self.is_playing = True
+        
+        if self.current_music != "":
+            pygame.mixer.music.unpause()
     
     def stop_music(self):
         pygame.mixer.music.stop()
         pygame.mixer.music.rewind()
         self.is_playing = False
         self.current_music = ""
+    
+    def pause_music(self):
+        pygame.mixer.music.pause()
+        self.is_playing = False
