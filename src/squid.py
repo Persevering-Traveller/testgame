@@ -45,7 +45,7 @@ class Squid(Enemy):
                 self.x_velocity += self.direction * self.acceleration * dt
 
                 if self.stomp_check(): # From Enemy class
-                    # TODO play death sound effect
+                    constants.SOUND_MANAGER.play_sfx(constants.SOUNDFX.HIT)
                     return # Early return so x and y velocity aren't overwritten
 
                 # Checks to see if they touch a wall or if there's a cliff...
