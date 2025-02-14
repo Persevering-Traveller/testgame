@@ -15,6 +15,13 @@ COLLISION_TILES = [39, 40, 41, # Single Row Grass tiles
                    68, # Single Grass tile
                    81, 94] # Single Column Grass tiles
 
+# The tile IDs used for each entity's position and the end of level position
+# Yes, it's just the Winter Tree tiles, I got lazy lol
+PLAYER_POSITION = 4
+ENEMY_POSITION = 5
+PICKUP_POSITION = 6
+END_POSITION = 31
+
 # TODO Setup the one-way collision tile
 #COLLISION_ONE_WAY_TILE = 42
 
