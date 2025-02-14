@@ -8,10 +8,14 @@ class Map():
         self.tile_map = None # Will hold the tileset image
         self.level_bg = None # Entity that will hold the background image
         self.level = [] # Holds the tiles of a level
+        self.player_pos = None
+        self.end_of_level_pos = None
+        self.enemy_pos = []
+        self.pickup_pos = []
 
     def load(self) -> None:
-        # Load the .csv file with open()
-        test_level = open("../assets/maps/test-level-v1.csv", "r")
+        # Load the World .csv file with open()
+        test_level = open("../assets/maps/test-level-v1_World.csv", "r")
         # Load the tileset image
         self.tile_map = pygame.image.load("../assets/sprites/tileset.png").convert_alpha() # convert_alpha() is needed or it will draw default black in the areas where there's no pixels in that square
         # Load the background image
@@ -44,6 +48,24 @@ class Map():
             self.level[i].set_pos(((i%constants.LEVEL_TILE_WIDTH), (i//constants.LEVEL_TILE_WIDTH)))
 
         test_level.close()
+
+        # Load in the positions for Player, Enemies, Pickups, and End of Level
+        pos_file = open("../assets/maps/test-level-v1_Positions.csv", "r")
+        positions = []
+        for line in pos_file:
+            positions.extend(line.split(","))
+        
+        for i in range(len(positions)):
+            match(int(positions[i])):
+                case 4:
+                    self.player_pos = pygame.Rect((i%constants.LEVEL_TILE_WIDTH) * constants.TILE_SIZE, (i//constants.LEVEL_TILE_WIDTH) * constants.TILE_SIZE, 1, 1)
+                case 5:
+                    self.enemy_pos.append(pygame.Rect((i%constants.LEVEL_TILE_WIDTH) * constants.TILE_SIZE, (i//constants.LEVEL_TILE_WIDTH) * constants.TILE_SIZE, 1, 1))
+                case 6:
+                    self.pickup_pos.append(pygame.Rect((i%constants.LEVEL_TILE_WIDTH) * constants.TILE_SIZE, (i//constants.LEVEL_TILE_WIDTH) * constants.TILE_SIZE, 1, 1))
+        
+        #print(f"Player Pos: {self.player_pos}\nEnemies: {self.enemy_pos}\nPickups: {self.pickup_pos}")
+        pos_file.close()
 
     def draw(self, canvas) -> None:
         #Draw background first, and move background in order to be parallax
@@ -83,6 +105,15 @@ class Map():
 
     def get_level_bg(self):
         return self.level_bg
+
+    def get_player_start_pos(self):
+        return self.player_pos
+    
+    def get_enemy_positions(self):
+        return self.enemy_pos
+    
+    def get_pickup_positions(self):
+        return self.pickup_pos
 
     def reset(self):
         for tile in self.level:
