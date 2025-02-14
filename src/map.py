@@ -57,14 +57,17 @@ class Map():
         
         for i in range(len(positions)):
             match(int(positions[i])):
-                case 4:
+                case constants.PLAYER_POSITION:
                     self.player_pos = pygame.Rect((i%constants.LEVEL_TILE_WIDTH) * constants.TILE_SIZE, (i//constants.LEVEL_TILE_WIDTH) * constants.TILE_SIZE, 1, 1)
-                case 5:
+                case constants.ENEMY_POSITION:
                     self.enemy_pos.append(pygame.Rect((i%constants.LEVEL_TILE_WIDTH) * constants.TILE_SIZE, (i//constants.LEVEL_TILE_WIDTH) * constants.TILE_SIZE, 1, 1))
-                case 6:
+                case constants.PICKUP_POSITION:
                     self.pickup_pos.append(pygame.Rect((i%constants.LEVEL_TILE_WIDTH) * constants.TILE_SIZE, (i//constants.LEVEL_TILE_WIDTH) * constants.TILE_SIZE, 1, 1))
+                case constants.END_POSITION:
+                    self.end_of_level_pos = pygame.Rect((i%constants.LEVEL_TILE_WIDTH) * constants.TILE_SIZE, (i//constants.LEVEL_TILE_WIDTH) * constants.TILE_SIZE, 1, 1)
+
         
-        #print(f"Player Pos: {self.player_pos}\nEnemies: {self.enemy_pos}\nPickups: {self.pickup_pos}")
+        #print(f"Player Pos: {self.player_pos}\nEnemies: {self.enemy_pos}\nPickups: {self.pickup_pos}\nEnd of Level: {self.end_of_level_pos}")
         pos_file.close()
 
     def draw(self, canvas) -> None:
