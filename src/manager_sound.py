@@ -14,6 +14,8 @@ class SoundManager():
         self.sfx_hit = None
         self.sfx_jump = None
         self.sfx_hurt = None
+        self.sfx_move_cursor = None
+        self.sfx_get_coin = None
     
     def load(self):
         # TODO Convert all .wav into .ogg
@@ -26,9 +28,13 @@ class SoundManager():
         self.sfx_hit = pygame.Sound("../assets/sfx/hit.ogg")
         self.sfx_jump = pygame.Sound("../assets/sfx/jump.wav")
         self.sfx_hurt = pygame.Sound("../assets/sfx/player-died.wav")
+        self.sfx_move_cursor = pygame.Sound("../assets/sfx/move-cursor.wav")
+        self.sfx_get_coin = pygame.Sound("../assets/sfx/coin.wav")
     
     def play_sfx(self, sfx):
         match sfx:
+            case constants.SOUNDFX.CURSOR:
+                self.sfx_move_cursor.play()
             case constants.SOUNDFX.CONFIRM:
                 self.sfx_confirm.play()
             case constants.SOUNDFX.GAMEOVER:
@@ -37,6 +43,8 @@ class SoundManager():
                 self.sfx_end.play()
             case constants.SOUNDFX.HIT:
                 self.sfx_hit.play()
+            case constants.SOUNDFX.COIN:
+                self.sfx_get_coin.play()
             case constants.SOUNDFX.JUMP:
                 self.sfx_jump.play()
             case constants.SOUNDFX.DIED:
