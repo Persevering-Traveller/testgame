@@ -92,7 +92,8 @@ class Game():
             enemy.set_player_ref(self.player)
         for pickup in self.pickups:
             pickup.set_player_ref(self.player)
-        self.player.enemy_ref = self.enemies[0] # TODO delete this after setting up Enemy Manager
+
+        self.player.enemy_refs = self.enemies # TODO delete this after setting up Enemy Manager
         constants.SOUND_MANAGER.load()
 
         self.camera.set_level_tiles(self.map.get_level_data())
@@ -257,8 +258,10 @@ class Game():
         self.time = LEVEL_TIME
         self.player.reset()
         # TODO Have Enemy Manager and Coin Manager reset
-        self.enemy.reset()
-        self.pickup.reset()
+        for enemy in self.enemies:
+            enemy.reset()
+        for pickup in self.pickups:
+            pickup.reset()
         self.map.reset()
         self.camera.reset()
     
