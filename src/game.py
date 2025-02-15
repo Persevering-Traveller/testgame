@@ -99,6 +99,7 @@ class Game():
             pickup.set_player_ref(self.player)
 
         self.player.enemy_refs = self.enemies # TODO delete this after setting up Enemy Manager
+        self.player.end_of_level_loc_ref = self.map.end_of_level_pos
         constants.SOUND_MANAGER.load()
 
         self.camera.set_level_tiles(self.map.get_level_data())
@@ -213,6 +214,12 @@ class Game():
                         constants.TIMER_MANAGER.start_timer(self.reset_timer)
                         constants.SOUND_MANAGER.stop_music()
                         self.state = constants.GAMESTATE.RESET
+                    if event.type == constants.CUSTOMEVENTS.PLAYER_REACH_GOAL:
+                        constants.SOUND_MANAGER.stop_music()
+                        constants.SOUND_MANAGER.play_sfx(constants.SOUNDFX.END)
+                        # Use reset timer to show you've won, then switch Game Over screen
+                        constants.TIMER_MANAGER.start_timer(self.reset_timer)
+                        self.state = constants.GAMESTATE.WON
             case constants.GAMESTATE.PAUSED:
                 if keys[pygame.K_ESCAPE]:
                     constants.SOUND_MANAGER.play_music(constants.MUSIC.LEVEL)
@@ -236,6 +243,13 @@ class Game():
                             self.reset()
                             self.hud.update_health(self.player.health)
                             self.state = constants.GAMESTATE.GAMEPLAY
+            case constants.GAMESTATE.WON:
+                for event in pygame.event.get(constants.CUSTOMEVENTS.TIMER_ENDED):
+                            if event.type == constants.CUSTOMEVENTS.TIMER_ENDED:
+                                if event.dict["id"] == self.reset_timer:
+                                    self.state = constants.GAMESTATE.GAMEOVER
+                                    # Now use it to make Game Over screen go back to Title screen
+                                    constants.TIMER_MANAGER.start_timer(self.reset_timer)
 
     def draw(self) -> None:
         match self.state:
