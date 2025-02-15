@@ -236,6 +236,14 @@ class Player(Actor):
                 else:
                     self.x_velocity -= self.deacceleration * dt
             return last_dir
+    
+    def die(self):
+        if self.awake:
+            self.awake = False
+            self.health = 0
+            constants.SOUND_MANAGER.play_sfx(constants.SOUNDFX.DIED)
+            constants.TIMER_MANAGER.start_timer(self.start_over_timer)
+            self.current_state = PLAYERSTATES.DIED
                 
     def reset(self):
         super().reset()
