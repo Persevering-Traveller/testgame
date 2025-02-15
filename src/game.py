@@ -7,7 +7,7 @@ from squid import Squid
 from camera import Camera
 import constants
 
-LEVEL_TIME = 9
+LEVEL_TIME = 999
 LIFE_UP_COIN_AMT = 10000
 FONT_SIZE = 10
 TEXT_X = 70
@@ -28,7 +28,7 @@ class Game():
     def __init__(self) -> None:
         pygame.init()
 
-        self.state = constants.GAMESTATE.GAMEOVER
+        self.state = constants.GAMESTATE.TITLE
         
         self.window_size = 4
         # Screen has to come before canvas because Surface.convert() needs a window display first
@@ -204,6 +204,10 @@ class Game():
                         self.hud.update_health(self.player.health)
                     if event.type == constants.CUSTOMEVENTS.PLAYER_DIED:
                         self.lives -= 1
+                        if self.lives < 0:
+                            constants.SOUND_MANAGER.stop_music()
+                            self.state = constants.GAMESTATE.GAMEOVER
+                            return
                         self.hud.update_lives(self.lives)
                         constants.TIMER_MANAGER.start_timer(self.reset_timer)
                         constants.SOUND_MANAGER.stop_music()
