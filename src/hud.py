@@ -175,3 +175,15 @@ class HUD():
     
     def update_lives(self, lives):
         self.lives = self.convert_numeral_to_surf_rect(lives)
+    
+    def reset(self):
+        self.lives = self.score_font[2]
+        
+        for i in range(3):
+            self.hearts[i] = self.player_icons[ICON_HEART_FULL]
+
+        for i in range(6):
+            self.score[i] = self.score_font[9] # Fill the score with zeroes
+        
+        for i in range(2):
+            self.coins[i] = self.score_font[9]
