@@ -27,7 +27,7 @@ class Player(Actor):
 
         self.current_state = PLAYERSTATES.IDLE
 
-        self.enemy_ref = None # TODO Get list of awake enemies from Enemy Manager when created
+        self.enemy_refs = None # TODO Get list of awake enemies from Enemy Manager when created
 
         self.hurt_timer = None
         self.start_over_timer = None
@@ -95,40 +95,43 @@ class Player(Actor):
             self.pos_rect.move_ip(self.x_velocity, self.y_velocity) # Fly off screen if dead
 
         # TODO Check for overlapping only on awake enemies
-        overlapping_side = self.get_overlapping_side(self.enemy_ref)
-        if (overlapping_side != None and 
-            self.current_state != PLAYERSTATES.HURT and 
-            self.current_state != PLAYERSTATES.DIED):
-            # Player can be hurt from left, right, and top sides, but not bottom
-            if overlapping_side != constants.COLLISIONSIDE.BOTTOM: 
-                self.health -= 1
-                match overlapping_side:
-                    case constants.COLLISIONSIDE.LEFT:
-                        self.x_velocity = self.pushback_force_x
-                    case constants.COLLISIONSIDE.RIGHT:
-                        self.x_velocity = -self.pushback_force_x
-                    case constants.COLLISIONSIDE.TOP:
-                        # TODO This needs testing
-                        if self.pos_rect.center > self.enemy_ref.pos_rect.center:
+        for enemy in self.enemy_refs:
+            if not enemy.awake:
+                continue
+            overlapping_side = self.get_overlapping_side(enemy)
+            if (overlapping_side != None and 
+                self.current_state != PLAYERSTATES.HURT and 
+                self.current_state != PLAYERSTATES.DIED):
+                # Player can be hurt from left, right, and top sides, but not bottom
+                if overlapping_side != constants.COLLISIONSIDE.BOTTOM: 
+                    self.health -= 1
+                    match overlapping_side:
+                        case constants.COLLISIONSIDE.LEFT:
                             self.x_velocity = self.pushback_force_x
-                        else:
+                        case constants.COLLISIONSIDE.RIGHT:
                             self.x_velocity = -self.pushback_force_x
-                self.y_velocity = self.pushback_force_y
-                self.awake = False
-                pygame.event.post(pygame.Event(constants.CUSTOMEVENTS.PLAYER_HURT))
-                if self.health > 0:
-                    constants.SOUND_MANAGER.play_sfx(constants.SOUNDFX.HIT)
-                    constants.TIMER_MANAGER.start_timer(self.hurt_timer)
-                    self.current_state = PLAYERSTATES.HURT
-                elif self.health <= 0:
-                    constants.SOUND_MANAGER.play_sfx(constants.SOUNDFX.DIED)
-                    constants.TIMER_MANAGER.start_timer(self.start_over_timer)
-                    self.current_state = PLAYERSTATES.DIED
-            else: # Bounce off enemies like jumping
-                self.y_velocity = self.jump_force
-                self.current_state = PLAYERSTATES.JUMPING
-            # Player is flung up into the air regardless of how the overlap happened
-            self.is_grounded = False
+                        case constants.COLLISIONSIDE.TOP:
+                            # TODO This needs testing
+                            if self.pos_rect.center > enemy.pos_rect.center:
+                                self.x_velocity = self.pushback_force_x
+                            else:
+                                self.x_velocity = -self.pushback_force_x
+                    self.y_velocity = self.pushback_force_y
+                    self.awake = False
+                    pygame.event.post(pygame.Event(constants.CUSTOMEVENTS.PLAYER_HURT))
+                    if self.health > 0:
+                        constants.SOUND_MANAGER.play_sfx(constants.SOUNDFX.HIT)
+                        constants.TIMER_MANAGER.start_timer(self.hurt_timer)
+                        self.current_state = PLAYERSTATES.HURT
+                    elif self.health <= 0:
+                        constants.SOUND_MANAGER.play_sfx(constants.SOUNDFX.DIED)
+                        constants.TIMER_MANAGER.start_timer(self.start_over_timer)
+                        self.current_state = PLAYERSTATES.DIED
+                else: # Bounce off enemies like jumping
+                    self.y_velocity = self.jump_force
+                    self.current_state = PLAYERSTATES.JUMPING
+                # Player is flung up into the air regardless of how the overlap happened
+                self.is_grounded = False
         
         for event in pygame.event.get(constants.CUSTOMEVENTS.TIMER_ENDED):
             if event.type == constants.CUSTOMEVENTS.TIMER_ENDED:
