@@ -54,7 +54,6 @@ class SoundManager():
                     self.is_playing = True
             case constants.MUSIC.LEVEL:
                 if self.current_music != self.mus_level:
-                    print("I'm playing Level Music")
                     pygame.mixer.music.load(self.mus_level)
                     pygame.mixer.music.play(-1)
                     self.current_music = self.mus_level
