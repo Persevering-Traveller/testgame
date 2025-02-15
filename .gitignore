@@ -1,8 +1,4 @@
-assets/fonts
-assets/maps
-assets/sprites
-assets/music
-assets/sfx
+assets/maps/archive
 bin/
 include
 lib/
@@ -10,4 +6,6 @@ lib64
 src/__pycache__/
 
 pyvenv.cfg
+
+*.wav
 
