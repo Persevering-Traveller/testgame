@@ -34,6 +34,7 @@ class GAMESTATE(Enum):
     PAUSED = 2
     GAMEOVER = 3
     RESET = 4
+    WON = 5
 
 class ENEMYSTATES(Enum):
     IDLE = 0
