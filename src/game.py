@@ -206,6 +206,7 @@ class Game():
                         self.lives -= 1
                         if self.lives < 0:
                             constants.SOUND_MANAGER.stop_music()
+                            constants.TIMER_MANAGER.start_timer(self.reset_timer)
                             self.state = constants.GAMESTATE.GAMEOVER
                             return
                         self.hud.update_lives(self.lives)
@@ -218,9 +219,16 @@ class Game():
                     self.state = constants.GAMESTATE.GAMEPLAY
                 if keys[pygame.K_RETURN]:
                     pygame.event.post(pygame.Event(pygame.QUIT))
-            # TODO GAMEOVER state shouldn't have any controls, just have a timer and then go back to TITLE state
             case constants.GAMESTATE.GAMEOVER:
-                pass
+                for event in pygame.event.get(constants.CUSTOMEVENTS.TIMER_ENDED):
+                    if event.type == constants.CUSTOMEVENTS.TIMER_ENDED:
+                        if event.dict["id"] == self.reset_timer:
+                            self.lives = 3
+                            self.coins = 0
+                            self.score = 0
+                            self.reset()
+                            self.hud.reset()
+                            self.state = constants.GAMESTATE.TITLE     
             case constants.GAMESTATE.RESET:
                 for event in pygame.event.get(constants.CUSTOMEVENTS.TIMER_ENDED):
                     if event.type == constants.CUSTOMEVENTS.TIMER_ENDED:
