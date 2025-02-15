@@ -28,6 +28,7 @@ class Player(Actor):
         self.current_state = PLAYERSTATES.IDLE
 
         self.enemy_refs = None # TODO Get list of awake enemies from Enemy Manager when created
+        self.end_of_level_loc_ref = None
 
         self.hurt_timer = None
         self.start_over_timer = None
@@ -93,8 +94,8 @@ class Player(Actor):
             self.y_collision_check(self.y_velocity)
         else:
             self.pos_rect.move_ip(self.x_velocity, self.y_velocity) # Fly off screen if dead
-
-        # TODO Check for overlapping only on awake enemies
+        
+        # Enemy Overlap checking
         for enemy in self.enemy_refs:
             if not enemy.awake:
                 continue
@@ -132,6 +133,11 @@ class Player(Actor):
                     self.current_state = PLAYERSTATES.JUMPING
                 # Player is flung up into the air regardless of how the overlap happened
                 self.is_grounded = False
+        
+        # End of Level Overlap checking
+        if self.world_pos.colliderect(self.end_of_level_loc_ref):
+            self.current_state = PLAYERSTATES.WIN
+            pygame.event.post(pygame.Event(constants.CUSTOMEVENTS.PLAYER_REACH_GOAL))
         
         for event in pygame.event.get(constants.CUSTOMEVENTS.TIMER_ENDED):
             if event.type == constants.CUSTOMEVENTS.TIMER_ENDED:
