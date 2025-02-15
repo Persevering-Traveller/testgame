@@ -63,6 +63,8 @@ class SOUNDFX(Enum):
     HIT = 3
     JUMP = 4
     DIED = 5
+    CURSOR = 6
+    COIN = 7
 
 class MUSIC(Enum):
     MAIN_MENU = 0
