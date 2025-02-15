@@ -28,7 +28,7 @@ class Game():
     def __init__(self) -> None:
         pygame.init()
 
-        self.state = constants.GAMESTATE.TITLE
+        self.state = constants.GAMESTATE.GAMEOVER
         
         self.window_size = 4
         # Screen has to come before canvas because Surface.convert() needs a window display first
@@ -51,6 +51,11 @@ class Game():
         self.title_cursor_selection = 0
         self.title_play_text_surf = None
         self.title_quit_text_surf = None
+
+        self.game_over_text_surf = None
+        self.game_over_text_location = None
+        self.thanks_text_surf = None
+        self.thanks_text_location = None
 
         self.pause_surf = None
         self.pause_text = None
@@ -112,6 +117,11 @@ class Game():
         self.title_cursor_locations.append(pygame.Rect(TITLE_CURSOR_X, TEXT_QUIT_Y, 8, 8))
         #self.title_cursor_surf = pygame.image.load().convert()
         self.title_cursor_surf = self.game_font.render(">", False, "white")
+
+        self.game_over_text_surf = self.game_font.render("G A M E  O V E R", False, "white")
+        self.thanks_text_surf = self.game_font.render("Thanks for Playing!", False, "white")
+        self.game_over_text_location = pygame.Rect(40, 60, 1, 1)
+        self.thanks_text_location = pygame.Rect(35, 80, 1, 1)
 
         self.pause_surf = pygame.Surface((PAUSE_SURF_WIDTH, PAUSE_SURF_HEIGHT)).convert()
         self.pause_surf.fill("black")
@@ -240,9 +250,10 @@ class Game():
             case constants.GAMESTATE.PAUSED:
                 self.canvas.blit(self.pause_surf, (PAUSE_X, PAUSE_Y))
                 
-            # TODO GAMEOVER state should draw Game Over screen stuff
             case constants.GAMESTATE.GAMEOVER:
-                pass
+                self.canvas.blit(self.game_over_text_surf, self.game_over_text_location)
+                if self.lives > -1:
+                    self.canvas.blit(self.thanks_text_surf, self.thanks_text_location)
 
             case constants.GAMESTATE.RESET:
                 self.canvas.fill(pygame.Color(0, 0, 0))
