@@ -18,18 +18,17 @@ class SoundManager():
         self.sfx_get_coin = None
     
     def load(self):
-        # TODO Convert all .wav into .ogg
-        self.mus_menu = "../assets/music/menu-theme.wav"
-        self.mus_level = "../assets/music/level.wav"
+        self.mus_menu = "../assets/music/menu-theme.ogg"
+        self.mus_level = "../assets/music/level.ogg"
 
-        self.sfx_confirm = pygame.Sound("../assets/sfx/confirm-beep.wav")
-        self.sfx_gameover = pygame.Sound("../assets/sfx/game-over.wav")
-        self.sfx_end = pygame.Sound("../assets/sfx/end-of-level.wav")
+        self.sfx_confirm = pygame.Sound("../assets/sfx/confirm-beep.ogg")
+        self.sfx_gameover = pygame.Sound("../assets/sfx/game-over.ogg")
+        self.sfx_end = pygame.Sound("../assets/sfx/end-of-level.ogg")
         self.sfx_hit = pygame.Sound("../assets/sfx/hit.ogg")
-        self.sfx_jump = pygame.Sound("../assets/sfx/jump.wav")
-        self.sfx_hurt = pygame.Sound("../assets/sfx/player-died.wav")
-        self.sfx_move_cursor = pygame.Sound("../assets/sfx/move-cursor.wav")
-        self.sfx_get_coin = pygame.Sound("../assets/sfx/coin.wav")
+        self.sfx_jump = pygame.Sound("../assets/sfx/jump.ogg")
+        self.sfx_hurt = pygame.Sound("../assets/sfx/player-died.ogg")
+        self.sfx_move_cursor = pygame.Sound("../assets/sfx/move-cursor.ogg")
+        self.sfx_get_coin = pygame.Sound("../assets/sfx/coin.ogg")
     
     def play_sfx(self, sfx):
         match sfx:
