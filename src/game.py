@@ -7,7 +7,7 @@ from squid import Squid
 from camera import Camera
 import constants
 
-LEVEL_TIME = 999
+LEVEL_TIME = 9
 LIFE_UP_COIN_AMT = 10000
 FONT_SIZE = 10
 TEXT_X = 70
@@ -164,7 +164,10 @@ class Game():
                     enemy.update(dt)
                 self.camera.update(dt)
                 self.time -= dt
-                #TODO if self.time <= 0: change state to GAMEOVER
+                # Player dies on time out
+                if self.time <= 1:
+                    self.time = 0
+                    self.player.die()
 
                 for event in pygame.event.get([constants.CUSTOMEVENTS.PICKUP_COLLECTED, 
                                                constants.CUSTOMEVENTS.ENEMY_STOMPED,
