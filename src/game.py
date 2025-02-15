@@ -105,6 +105,7 @@ class Game():
             self.camera.add_level_entity(enemy)
         self.camera.set_camera_target(self.player)
 
+        self.title_logo_surf = pygame.image.load("../assets/sprites/main-menu-bg.png").convert()
         self.title_play_text_surf = self.game_font.render("Play", False, "white")
         self.title_quit_text_surf = self.game_font.render("Quit", False, "white")
         self.title_cursor_locations.append(pygame.Rect(TITLE_CURSOR_X, TEXT_PLAY_Y, 8, 8))
@@ -216,6 +217,7 @@ class Game():
             case constants.GAMESTATE.TITLE:
                 self.canvas.fill(pygame.color.Color(0, 0, 0)) # Background -- Black
 
+                self.canvas.blit(self.title_logo_surf, (0, 0))
                 self.canvas.blit(self.title_play_text_surf, (TEXT_X, TEXT_PLAY_Y))
                 self.canvas.blit(self.title_quit_text_surf, (TEXT_X, TEXT_QUIT_Y))
                 self.canvas.blit(self.title_cursor_surf, self.title_cursor_locations[self.title_cursor_selection])
