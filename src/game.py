@@ -135,11 +135,11 @@ class Game():
                 if keys[pygame.K_w]:
                     # Move selection cursor up
                     self.title_cursor_selection = abs((self.title_cursor_selection - 1) % len(self.title_cursor_locations))
-                    constants.SOUND_MANAGER.play_sfx(constants.SOUNDFX.HIT)
+                    constants.SOUND_MANAGER.play_sfx(constants.SOUNDFX.CURSOR)
                 if keys[pygame.K_s]:
                     # Move selection cursor down
                     self.title_cursor_selection = (self.title_cursor_selection + 1) % len(self.title_cursor_locations)
-                    constants.SOUND_MANAGER.play_sfx(constants.SOUNDFX.HIT)
+                    constants.SOUND_MANAGER.play_sfx(constants.SOUNDFX.CURSOR)
                 if keys[pygame.K_RETURN] or keys[pygame.K_j]:
                     # Read selection and change state/quit accordingly
                     constants.SOUND_MANAGER.play_sfx(constants.SOUNDFX.CONFIRM)
