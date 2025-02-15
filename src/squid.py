@@ -88,5 +88,5 @@ class Squid(Enemy):
         self.health = 1
         self.direction = -1
         self.current_state = constants.ENEMYSTATES.WALKING
-        self.pos_rect.x = 112
-        self.pos_rect.y = 80
+        self.pos_rect = self.initial_world_pos.copy()
+        self.world_pos = self.pos_rect.copy()

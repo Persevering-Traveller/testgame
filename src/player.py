@@ -241,5 +241,5 @@ class Player(Actor):
         super().reset()
         self.health = 3
         self.current_state = PLAYERSTATES.IDLE
-        self.pos_rect.x = 80
-        self.pos_rect.y = 80
+        self.pos_rect = self.initial_world_pos.copy()
+        self.world_pos = self.pos_rect.copy()

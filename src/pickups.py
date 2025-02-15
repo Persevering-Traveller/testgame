@@ -64,5 +64,5 @@ class Pickup(Entity):
     def reset(self):
         super().reset()
         self.current_state = PICKUPSTATE.IDLE
-        self.pos_rect.x = 64
-        self.pos_rect.y = 56
+        self.pos_rect = self.initial_world_pos.copy()
+        self.world_pos = self.pos_rect.copy()
