@@ -19,8 +19,8 @@ class Pickup(Entity):
         self.current_state = PICKUPSTATE.IDLE
         self.point_val = 100
 
-    def load(self):
-        self.pos_rect = pygame.Rect(64, 56, SPRITE_SIZE, SPRITE_SIZE) # TODO load this in from some file actually, for now "center" screen
+    def load(self, x, y):
+        self.pos_rect = pygame.Rect(x, y, SPRITE_SIZE, SPRITE_SIZE) # TODO load this in from some file actually, for now "center" screen
         self.world_pos = self.pos_rect.copy() # Initially, pos_rect of screen space is the same as world pos
         self.initial_world_pos = self.world_pos.copy()
         self.sprite = pygame.image.load("../assets/sprites/pickup-coin-sheet.png").convert_alpha()

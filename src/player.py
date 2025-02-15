@@ -32,9 +32,9 @@ class Player(Actor):
         self.hurt_timer = None
         self.start_over_timer = None
 
-    def load(self):
+    def load(self, x, y):
         self.sprite = pygame.image.load("../assets/sprites/player-sheet.png").convert_alpha()
-        self.pos_rect = pygame.Rect(80, 80, self.collision_dimensions[0], self.collision_dimensions[1])
+        self.pos_rect = pygame.Rect(x, y, self.collision_dimensions[0], self.collision_dimensions[1])
         self.world_pos = self.pos_rect.copy() # Initially, pos_rect of screen space is the same as world pos
         self.initial_world_pos = self.world_pos.copy()
 
