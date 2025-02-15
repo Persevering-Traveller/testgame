@@ -21,10 +21,6 @@ class Entity():
     def get_world_pos(self):
         return self.world_pos
     
-    def set_world_pos(self, x, y):
-        self.world_pos.x += x
-        self.world_pos.y += y
-    
     # This is a method meant to be used by the Camera object in order to "move the camera"
     # Though what's really happening is the world is shifting in the opposite direction of
     # the camera's focused entity's movement direction (Player goes ->, Shift world <-, 
