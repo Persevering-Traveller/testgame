@@ -40,9 +40,9 @@ class Game():
 
         self.map = Map()
         self.hud = HUD()
-        self.pickup = Pickup()
+        self.pickups = []
         self.player = Player()
-        self.enemy = Squid()
+        self.enemies = []
         self.camera = Camera()
 
         self.title_logo_surf = None
@@ -73,21 +73,35 @@ class Game():
         self.map.load()
         self.hud.set_font_ref(self.game_font) # Needs to come before load
         self.hud.load()
-        self.pickup.load()
-        self.player.load()
-        self.enemy.load()
+        for pickup in self.map.get_pickup_positions():
+            new_pickup = Pickup()
+            new_pickup.load(pickup.x, pickup.y)
+            self.pickups.append(new_pickup)
+
+        self.player.load(self.map.get_player_start_pos().x,self.map.get_player_start_pos().y)
+
+        for enemy in self.map.get_enemy_positions():
+            new_enemy = Squid()
+            new_enemy.load(enemy.x, enemy.y)
+            self.enemies.append(new_enemy)
+        
+        # Set references
         self.player.set_map_ref(self.map)
-        self.enemy.set_map_ref(self.map)
-        self.pickup.set_player_ref(self.player)
-        self.enemy.set_player_ref(self.player)
-        self.player.enemy_ref = self.enemy # TODO delete this after setting up Enemy Manager
+        for enemy in self.enemies:
+            enemy.set_map_ref(self.map)
+            enemy.set_player_ref(self.player)
+        for pickup in self.pickups:
+            pickup.set_player_ref(self.player)
+        self.player.enemy_ref = self.enemies[0] # TODO delete this after setting up Enemy Manager
         constants.SOUND_MANAGER.load()
 
         self.camera.set_level_tiles(self.map.get_level_data())
         self.camera.set_background_ref(self.map.get_level_bg())
-        self.camera.add_level_entity(self.pickup)
+        for pickup in self.pickups:
+            self.camera.add_level_entity(pickup)
         self.camera.add_level_entity(self.player)
-        self.camera.add_level_entity(self.enemy)
+        for enemy in self.enemies:
+            self.camera.add_level_entity(enemy)
         self.camera.set_camera_target(self.player)
 
         self.title_play_text_surf = self.game_font.render("Play", False, "white")
@@ -141,9 +155,11 @@ class Game():
                     self.state = constants.GAMESTATE.PAUSED
                 
                 self.hud.update_time(self.time)
-                self.pickup.update(dt)
+                for pickup in self.pickups:
+                    pickup.update(dt)
                 self.player.update(dt)
-                self.enemy.update(dt)
+                for enemy in self.enemies:
+                    enemy.update(dt)
                 self.camera.update(dt)
                 self.time -= dt
                 #TODO if self.time <= 0: change state to GAMEOVER
@@ -154,7 +170,8 @@ class Game():
                                                constants.CUSTOMEVENTS.PLAYER_DIED,
                                                constants.CUSTOMEVENTS.PLAYER_REACH_GOAL]):
                     if event.type == constants.CUSTOMEVENTS.PICKUP_COLLECTED:
-                        self.score += self.pickup.point_val
+                        point_value = self.pickups[0].point_val # The point value of every coin is the same
+                        self.score += point_value
                         self.coins += 1
                         self.hud.update_score(self.score)
                         if self.coins == 100:
@@ -164,7 +181,8 @@ class Game():
                         self.hud.update_coins(self.coins)
                         self.check_life_up()
                     if event.type == constants.CUSTOMEVENTS.ENEMY_STOMPED:
-                        self.score += self.enemy.squashed_point_val
+                        squashed_enemy_points = self.enemies[0].squashed_point_val # Point value is the same for all enemies
+                        self.score += squashed_enemy_points
                         self.hud.update_score(self.score)
                         self.check_life_up()
                     if event.type == constants.CUSTOMEVENTS.PLAYER_HURT:
@@ -205,9 +223,11 @@ class Game():
                 self.canvas.fill(pygame.color.Color(128, 128, 255)) # Good ol' Cornflower Blue!
 
                 self.map.draw(self.canvas)
-                self.pickup.draw(self.canvas)
+                for pickup in self.pickups:
+                    pickup.draw(self.canvas)
                 self.player.draw(self.canvas)
-                self.enemy.draw(self.canvas)
+                for enemy in self.enemies:
+                    enemy.draw(self.canvas)
 
                 self.hud.draw(self.canvas)
             
