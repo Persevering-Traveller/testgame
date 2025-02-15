@@ -34,6 +34,7 @@ class Pickup(Entity):
         # Have to check current state or anim_index will set back to collected start frame while still colliding
         if self.player_ref.awake:
             if self.pos_rect.colliderect(self.player_ref.pos_rect) and self.current_state != PICKUPSTATE.COLLECTED:
+                constants.SOUND_MANAGER.play_sfx(constants.SOUNDFX.COIN)
                 self.current_state = PICKUPSTATE.COLLECTED
                 self.anim_index = ANIM_COLLECTED_FRAME_START
                 self.anim_counter = self.anim_speed # Make it so that it will immediately change animation on collected
