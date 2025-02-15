@@ -255,6 +255,7 @@ class Game():
                 self.canvas.blit(self.pause_surf, (PAUSE_X, PAUSE_Y))
                 
             case constants.GAMESTATE.GAMEOVER:
+                self.canvas.fill(pygame.color.Color(0, 0, 0)) # Background -- Black
                 self.canvas.blit(self.game_over_text_surf, self.game_over_text_location)
                 if self.lives > -1:
                     self.canvas.blit(self.thanks_text_surf, self.thanks_text_location)
