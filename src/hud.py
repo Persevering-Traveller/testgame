@@ -1,5 +1,5 @@
 import pygame
-import constants
+import src.constants as constants
 
 ICON_SIZE = 8
 
@@ -54,7 +54,7 @@ class HUD():
         self.coins_surf = self.font.render("COINS", False, "white").convert()
 
         # Load HUD spritesheet
-        self.sheet = pygame.image.load("../assets/sprites/hud-sheet.png").convert_alpha()
+        self.sheet = pygame.image.load("./assets/sprites/hud-sheet.png").convert_alpha()
         # Load time subdraw positions
         for i in range(12): # 6x2 layout in sheet
             self.time_font_and_icon.append(pygame.Rect((i%6)*ICON_SIZE, (i//6)*ICON_SIZE, ICON_SIZE, ICON_SIZE))

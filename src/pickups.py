@@ -1,7 +1,7 @@
 from enum import Enum
 import pygame
-from entity import Entity
-import constants
+from src.entity import Entity
+import src.constants as constants
 
 SPRITE_SIZE = 16
 ANIM_FRAME_COUNT = 4
@@ -23,7 +23,7 @@ class Pickup(Entity):
         self.pos_rect = pygame.Rect(x, y, SPRITE_SIZE, SPRITE_SIZE) # TODO load this in from some file actually, for now "center" screen
         self.world_pos = self.pos_rect.copy() # Initially, pos_rect of screen space is the same as world pos
         self.initial_world_pos = self.world_pos.copy()
-        self.sprite = pygame.image.load("../assets/sprites/pickup-coin-sheet.png").convert_alpha()
+        self.sprite = pygame.image.load("./assets/sprites/pickup-coin-sheet.png").convert_alpha()
         for i in range(8):
             self.anim_frames.append(pygame.Rect((i%ANIM_FRAME_COUNT)*SPRITE_SIZE, (i//ANIM_FRAME_COUNT)*SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE))
 

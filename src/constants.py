@@ -1,7 +1,7 @@
 from enum import Enum
 import pygame
-from manager_timer import TimerManager
-from manager_sound import SoundManager
+from src.manager_timer import TimerManager
+from src.manager_sound import SoundManager
 
 CANVAS_WIDTH = 160
 CANVAS_HEIGHT = 144

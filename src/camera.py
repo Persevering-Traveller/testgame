@@ -1,4 +1,4 @@
-import constants
+import src.constants as constants
 
 class Camera():
     def __init__(self):

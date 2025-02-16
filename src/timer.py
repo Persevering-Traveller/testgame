@@ -1,5 +1,5 @@
 import pygame
-import constants
+import src.constants as constants
 
 class Timer():
     def __init__(self, id, end_time = 0):

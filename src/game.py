@@ -1,11 +1,11 @@
 import pygame
-from map import Map
-from hud import HUD
-from pickups import Pickup
-from player import Player
-from squid import Squid
-from camera import Camera
-import constants
+from src.map import Map
+from src.hud import HUD
+from src.pickups import Pickup
+from src.player import Player
+from src.squid import Squid
+from src.camera import Camera
+import src.constants as constants
 
 LEVEL_TIME = 999
 LIFE_UP_COIN_AMT = 10000
@@ -36,7 +36,7 @@ class Game():
         self.screen = pygame.display.set_mode((constants.CANVAS_WIDTH * self.window_size, constants.CANVAS_HEIGHT * self.window_size), 0, 0, 0, 1)
         self.canvas = pygame.Surface((constants.CANVAS_WIDTH, constants.CANVAS_HEIGHT)).convert()
         pygame.display.set_caption("Test Game")
-        self.game_font = pygame.font.Font("../assets/fonts/game_font.ttf", FONT_SIZE) # NOTE I've tried other fonts, but they render poorly at 160x144 scale
+        self.game_font = pygame.font.Font("./assets/fonts/game_font.ttf", FONT_SIZE) # NOTE I've tried other fonts, but they render poorly at 160x144 scale
 
         self.map = Map()
         self.hud = HUD()
@@ -111,7 +111,7 @@ class Game():
             self.camera.add_level_entity(enemy)
         self.camera.set_camera_target(self.player)
 
-        self.title_logo_surf = pygame.image.load("../assets/sprites/main-menu-bg.png").convert()
+        self.title_logo_surf = pygame.image.load("./assets/sprites/main-menu-bg.png").convert()
         self.title_play_text_surf = self.game_font.render("Play", False, "white")
         self.title_quit_text_surf = self.game_font.render("Quit", False, "white")
         self.title_cursor_locations.append(pygame.Rect(TITLE_CURSOR_X, TEXT_PLAY_Y, 8, 8))

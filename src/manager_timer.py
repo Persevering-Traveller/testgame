@@ -1,4 +1,4 @@
-from timer import Timer
+from src.timer import Timer
 
 class TimerManager():
     def __init__(self):

@@ -1,6 +1,6 @@
 import pygame
-from enemy import Enemy
-import constants
+from src.enemy import Enemy
+import src.constants as constants
 
 MAX_X_VELOCITY = 1.5
 
@@ -25,7 +25,7 @@ class Squid(Enemy):
         # Default 100 points for being stomped
 
     def load(self, x, y):
-        self.sprite = pygame.image.load("../assets/sprites/enemy-squid-sheet.png")
+        self.sprite = pygame.image.load("./assets/sprites/enemy-squid-sheet.png")
         self.pos_rect = pygame.Rect(x, y, self.collision_dimensions[0], self.collision_dimensions[1])
         self.world_pos = self.pos_rect.copy() # Initially, pos_rect of screen space is the same as world pos
         self.initial_world_pos = self.world_pos.copy()

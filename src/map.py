@@ -1,7 +1,7 @@
 import pygame
-from tile import Tile
-from entity import Entity
-import constants
+from src.tile import Tile
+from src.entity import Entity
+import src.constants as constants
 
 class Map():
     def __init__(self) -> None:
@@ -15,12 +15,12 @@ class Map():
 
     def load(self) -> None:
         # Load the World .csv file with open()
-        test_level = open("../assets/maps/test-level-v1_World.csv", "r")
+        test_level = open("./assets/maps/test-level-v1_World.csv", "r")
         # Load the tileset image
-        self.tile_map = pygame.image.load("../assets/sprites/tileset.png").convert_alpha() # convert_alpha() is needed or it will draw default black in the areas where there's no pixels in that square
+        self.tile_map = pygame.image.load("./assets/sprites/tileset.png").convert_alpha() # convert_alpha() is needed or it will draw default black in the areas where there's no pixels in that square
         # Load the background image
         self.level_bg = Entity()
-        self.level_bg.sprite = pygame.image.load("../assets/sprites/background.png").convert()
+        self.level_bg.sprite = pygame.image.load("./assets/sprites/background.png").convert()
         self.level_bg.anim_frames.append(pygame.Rect(0, 0, constants.CANVAS_WIDTH, constants.CANVAS_HEIGHT))
         self.level_bg.pos_rect = pygame.Rect(0, -32, constants.CANVAS_WIDTH, constants.CANVAS_HEIGHT) # That -32 is just so you can see the hills with current level layout
         # Read the csv file line by line and split it by commas
@@ -50,7 +50,7 @@ class Map():
         test_level.close()
 
         # Load in the positions for Player, Enemies, Pickups, and End of Level
-        pos_file = open("../assets/maps/test-level-v1_Positions.csv", "r")
+        pos_file = open("./assets/maps/test-level-v1_Positions.csv", "r")
         positions = []
         for line in pos_file:
             positions.extend(line.split(","))

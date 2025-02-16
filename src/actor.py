@@ -1,6 +1,6 @@
 import pygame
-from entity import Entity
-import constants
+from src.entity import Entity
+import src.constants as constants
 
 class Actor(Entity):
     def __init__(self) -> None:

@@ -1,6 +1,6 @@
 import pygame
-import constants
-from actor import Actor
+import src.constants as constants
+from src.actor import Actor
 
 class Enemy(Actor):
     def __init__(self):
