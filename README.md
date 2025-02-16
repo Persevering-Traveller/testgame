@@ -2,6 +2,14 @@
 A simple platformer game using GrafxKid's [Open Game Art](https://opengameart.org/content/arcade-platformer-assets) and [Pygame-CE](https://github.com/pygame-community/pygame-ce).
 This project is a way to familiarize myself with the Python language, and creating a platformer game using only a library.
 
+## Font Credits
+```
+True Type Font: Smallest Pixel-7 version 1.0
+Sizenko Alexander
+Style-7
+http://www.styleseven.com
+```
+
 ## Current Features
 * A moving and jumping player using states for input and animation
 * Animated and collectible coins
